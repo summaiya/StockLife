@@ -3,6 +3,16 @@ const fs = require('fs');
 const tourRouter = express.Router();
 //Get json file
 const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
+ const checkBody = (req, res, next)=>{
+    if(req.body.name === undefined || req.body.price === undefined){
+        res.status(400).json(notFoundRes);
+        console.log('Need to include name and price')
+    }
+    else{
+        console.log('Good Content, Keep on!')
+        next();
+    }
+}
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 const findItem = (items, itemFind)=>{
@@ -24,7 +34,9 @@ const notFoundRes = {
 }
 const writeFileFunc = (HTTPMethods)=>{
     fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tourContent), (err)=>{
+       if(err){
         console.log(`${HTTPMethods} is not successful. Error : ${err}`)
+       }
     })
 }
 
@@ -80,7 +92,7 @@ const deletePack = (req, res)=>{
 
 tourRouter.route('/')
     .get(getAllPacks)
-    .post(createPack)
+    .post(checkBody, createPack)
 tourRouter.route('/:id') 
     .get(getSinglePack)
     .patch(updatePack)

@@ -3,6 +3,11 @@ const userRouter = express.Router();
 const fs = require('fs');
 
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
+userRouter.use((req, res, next)=>{
+    console.log("I am in userRoutes");
+    next();
+})
+
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 const findItem = (items, itemFind)=>{
@@ -19,7 +24,9 @@ const notFoundRes = {
 }
 const writeFileFunc = (HTTPMethods)=>{
     fs.writeFile(`${__dirname}/dev-data/data/users.json`, JSON.stringify(userData), (err)=>{
-        console.log(`${HTTPMethods} is not successful. Error : ${err}`)
+        if(err){
+            console.log(`${HTTPMethods} is not successful. Error : ${err}`)
+        }
     })
 }
 
@@ -75,7 +82,7 @@ const deleteUserInfo = (req, res)=>{
    }
 }
 
-//Router
+//Router------------------------------------------------------------------------------------------
 userRouter.route('/')
     .get(getAllUser)
     .post(createUser)
