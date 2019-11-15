@@ -1,46 +1,41 @@
 const express = require('express');
+const userRouter = express.Router();
 const fs = require('fs');
-const tourRouter = express.Router();
-//Get json file
-const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
+
+const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 const findItem = (items, itemFind)=>{
-    if(isNaN(itemFind) !== true){
-        return items.find(element=>element.id===JSON.parse(itemFind))
-    }
-    else{
-        return undefined
-    }
+        return items.find(element=>element["_id"]===itemFind)
 }
 const successDataRes = {
     status: 'success',
-    length: tourContent.length,
-    data: tourContent
+    length: userData.length,
+    data: userData
 }
 const notFoundRes = {
     status: 'failed',
     message: 'NOT FOUND'
 }
 const writeFileFunc = (HTTPMethods)=>{
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tourContent), (err)=>{
+    fs.writeFile(`${__dirname}/dev-data/data/users.json`, JSON.stringify(userData), (err)=>{
         console.log(`${HTTPMethods} is not successful. Error : ${err}`)
     })
 }
 
 //ROUTE HANDLERS ---------------------------------------------------------------------------------------------------------------
-const getAllPacks = (req, res)=>{
+const getAllUser = (req, res)=>{
     res.status(200).json(successDataRes);
 }
-const createPack = (req, res)=>{
-    const incomingID =  tourContent[tourContent.length-1].id + 1;
-    const newPack = Object.assign({id: incomingID}, req.body);
-    tourContent.push(newPack);
+const createUser = (req, res)=>{
+    const newId =  userData[userData.length-1]["_id"] + 1;
+    const newPack = Object.assign({"_id": newId}, req.body);
+    userData.push(newPack);
     writeFileFunc('Create');
     res.status(201).json(successDataRes);    //SEND JSON version
 }
-const getSinglePack = (req, res)=>{
-    const ans = findItem(tourContent, (req.params.id));
+const getUserInfo = (req, res)=>{
+    const ans = findItem(userData, (req.params.id));
     if(ans === undefined){
         res.status(404).send(notFoundRes);
     }else{
@@ -52,12 +47,14 @@ const getSinglePack = (req, res)=>{
         );
     }
 }
-const updatePack = (req, res)=>{
-    const currentPack = findItem(tourContent, req.params.id);
+const changeUserInfo = (req, res)=>{
+    // console.log(req.params.id)
+    // console.log(typeof req.params.id)
+    const currentPack = findItem(userData, req.params.id);
     if(currentPack !== undefined){
         const inputData = req.body; //NEW Incoming Data
         const newCurrentPack = Object.assign(currentPack, inputData); // Update the Current Pack
-        tourContent[tourContent.indexOf(currentPack)] = newCurrentPack; //Insert the Updated Current Pack to the tourContent
+        userData[userData.indexOf(currentPack)] = newCurrentPack; //Insert the Updated Current Pack to the tourContent
         writeFileFunc('PATCH'); 
         res.status(200).json(successDataRes)
     }
@@ -65,10 +62,11 @@ const updatePack = (req, res)=>{
         res.status(404).json(notFoundRes)
     }
 }
-const deletePack = (req, res)=>{
-    const deletePack = findItem(tourContent,(req.params.id));
+
+const deleteUserInfo = (req, res)=>{
+    const deletePack = findItem(userData,(req.params.id));
    if(deletePack !== undefined){
-        tourContent.splice(tourContent.indexOf(deletePack), 1);
+        userData.splice(userData.indexOf(deletePack), 1);
         writeFileFunc('DELETE')
         res.status(200).json(successDataRes)
    }
@@ -76,14 +74,15 @@ const deletePack = (req, res)=>{
     res.status(404).json(notFoundRes)
    }
 }
-//All Routes ----------------------------------------------------------------------------------------------------------------
 
-tourRouter.route('/')
-    .get(getAllPacks)
-    .post(createPack)
-tourRouter.route('/:id') 
-    .get(getSinglePack)
-    .patch(updatePack)
-    .delete(deletePack)
+//Router
+userRouter.route('/')
+    .get(getAllUser)
+    .post(createUser)
 
-module.exports = tourRouter;
+userRouter.route('/:id')
+    .patch(changeUserInfo)
+    .delete(deleteUserInfo)
+    .get(getUserInfo)
+
+module.exports = userRouter
