@@ -3,7 +3,7 @@ const fs = require('fs');
 const tourRouter = express.Router();
 //Get json file
 const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
- const checkBody = (req, res, next)=>{
+const checkBody = (req, res, next)=>{
     if(req.body.name === undefined || req.body.price === undefined){
         res.status(400).json(notFoundRes);
         console.log('Need to include name and price')
@@ -15,9 +15,9 @@ const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours
 }
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
-const findItem = (items, itemFind)=>{
+const findItem = (itemFind)=>{
     if(isNaN(itemFind) !== true){
-        return items.find(element=>element.id===JSON.parse(itemFind))
+        return tourContent.find(element=>element.id===JSON.parse(itemFind))
     }
     else{
         return undefined
@@ -52,7 +52,7 @@ const createPack = (req, res)=>{
     res.status(201).json(successDataRes);    //SEND JSON version
 }
 const getSinglePack = (req, res)=>{
-    const ans = findItem(tourContent, (req.params.id));
+    const ans = findItem(req.params.id);
     if(ans === undefined){
         res.status(404).send(notFoundRes);
     }else{
@@ -65,7 +65,7 @@ const getSinglePack = (req, res)=>{
     }
 }
 const updatePack = (req, res)=>{
-    const currentPack = findItem(tourContent, req.params.id);
+    const currentPack = findItem(req.params.id);
     if(currentPack !== undefined){
         const inputData = req.body; //NEW Incoming Data
         const newCurrentPack = Object.assign(currentPack, inputData); // Update the Current Pack
@@ -78,7 +78,7 @@ const updatePack = (req, res)=>{
     }
 }
 const deletePack = (req, res)=>{
-    const deletePack = findItem(tourContent,(req.params.id));
+    const deletePack = findItem(req.params.id);
    if(deletePack !== undefined){
         tourContent.splice(tourContent.indexOf(deletePack), 1);
         writeFileFunc('DELETE')
