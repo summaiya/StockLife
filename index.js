@@ -1,6 +1,7 @@
 const color = require('colors');
 const express = require('express');
 const dotEnv = require('dotenv');
+const mongoose = require("mongoose")
 dotEnv.config({path : "./config.env"});
 
 //Connect Mongoose-----------------
