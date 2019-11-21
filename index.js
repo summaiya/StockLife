@@ -5,13 +5,14 @@ const mongoose = require("mongoose")
 dotEnv.config({path : "./config.env"});
 
 //Connect Mongoose-----------------
-const databaseConnectApp = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD); //Replace the password
+const databaseConnectApp = process.env.DATABASE.replace("<password>", process.env.DATABASE_PASSWORD); //Replace the password
 mongoose.connect(databaseConnectApp, {
     'useNewUrlParser': true,
     'useFindAndModify': false,
     'useCreateIndex': true,
     "useUnifiedTopology": true
-}).then(()=>{
+}).then((data)=>{
+    // console.log("data", data)
     console.log("Database Connected")
 }).catch(error=>console.log("Error:", error))
 //Connect Mongoose-----------------
