@@ -28,7 +28,6 @@ class APIFeatures {
     }
      sortFieldPagination(){
         let finalQuery = this.dataModel.find(this.filter());
-        console.log("finalQuery", finalQuery)
         Object.entries(this.queryData).forEach(entry => {
             /**
              * 3)Sorting

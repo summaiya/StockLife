@@ -3,8 +3,10 @@ const express = require('express');
 const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
+
 //-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
+const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
@@ -77,6 +79,8 @@ const deletePack = async (req, res)=>{
 //All Routes ----------------------------------------------------------------------------------------------------------------
 tourRouter.route('/top-5-best-rating')
     .get(top_five_cheap_and_best, getAllTours)
+tourRouter.route("/stats-rating")
+    .get(getStats)
 tourRouter.route('/')
     .get(getAllTours)
     .post(checkBody, createPack)

@@ -1,9 +1,9 @@
+
 //Import===================================================
 const tourDataModel = require("../../Model/tourModeling");
 const successDataRes = require("./successResponse");
 const apiFeatures = require("../../util/apiFeatures");
 //Import===================================================
-
 const getAllPacks = async (req, res)=>{
     try{
     const tourAPIFeatures = new apiFeatures(req.query, tourDataModel).sortFieldPagination();
@@ -14,5 +14,4 @@ const getAllPacks = async (req, res)=>{
         console.log("error", error)
     }
 }
-
 module.exports = getAllPacks;
