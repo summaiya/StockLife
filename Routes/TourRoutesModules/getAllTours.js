@@ -2,7 +2,14 @@
 const tourDataModel = require("../../Model/tourModeling");
 const successDataRes = require("./successResponse");
 //Import===================================================
+// class APIFeatures {
+//     constructor(query){
+//         this.query = query
+//     }
+//     filter(){
 
+//     }
+// }
 
 const getAllPacks = async (req, res)=>{
     try{
@@ -26,33 +33,35 @@ const getAllPacks = async (req, res)=>{
         queryObjFiltering = JSON.parse(queryObjFilteringString); //String => parse
 //=============================================  
         let queryData = tourDataModel.find(queryObjFiltering)
-        console.log('req.query', req.query)
-    /**
-     * 3)Sorting
-     * Input: sort=-price,ratingAverage
-     * Output: Descending Price info and accesending ratingAverage
-     */ 
-        if(req.query.sort){ 
+        const queryDataLength = await tourDataModel.find(queryObjFiltering);
+
+        Object.entries(req.query).forEach(entry => {
+        console.log('entry', entry)
+        /**
+         * 3)Sorting
+         * Input: sort=-price,ratingsQuantity
+         * Output: Descending Price info and accesending ratingsQuantity
+         */ 
+        if(entry[0] === "sort"){ 
             let querySort = req.query.sort.replace(",", " ");
             queryData = queryData.sort(querySort)
         }
-    /**
-     * 4)Field
-     * Input: fields=name,price,duration
-     * output: selected infomation
-     */
-        else if(req.query.fields){
+        /**
+         * 4)Field
+         * Input: fields=name,price,duration
+         * output: selected infomation
+         */
+        else if(entry[0] === "fields"){
             let queryField = req.query.fields.split(",").join(" ")
             console.log('queryField', queryField)
             queryData = queryData.select(queryField);
         }
-    /**
-     * 5)Pagination
-     * Input: page=1&limit=3
-     * Output: at page 1, there are 3 dataset
-     */
-         else if(req.query.page && req.query.limit){
-            const queryDataLength = await tourDataModel.find(queryObjFiltering);
+        /**
+         * 5)Pagination
+         * Input: page=1&limit=3
+         * Output: at page 1, there are 3 dataset
+         */
+        else if(entry[0] === "page" && req.query.limit){
             const page = JSON.parse(req.query.page);
             const limit = JSON.parse(req.query.limit);
             const skip = (page - 1) * limit;
@@ -60,11 +69,16 @@ const getAllPacks = async (req, res)=>{
                 throw new Error ("Beyond numbers of Pages")
             }
             queryData = queryData.skip(skip).limit(limit)
-         }
-    //Normal Display
+        }
+        else if(entry[0] === "limit"){
+            const limit = JSON.parse(req.query.limit);
+            queryData = queryData.limit(limit)
+        }
+        //Normal Display
         else{
             queryData = queryData.find(queryObjFiltering);
         }
+          }); 
     //Main) Response Sent
         res.status(200).json(await successDataRes(await queryData));
     }catch(error){

@@ -5,6 +5,7 @@ const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
 //-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
+const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
 
@@ -74,7 +75,8 @@ const deletePack = async (req, res)=>{
     }
 }
 //All Routes ----------------------------------------------------------------------------------------------------------------
-
+tourRouter.route('/top-5-best-rating')
+    .get(top_five_cheap_and_best, getAllTours)
 tourRouter.route('/')
     .get(getAllTours)
     .post(checkBody, createPack)
@@ -82,5 +84,6 @@ tourRouter.route('/:id')
     .get(getSinglePack)
     .patch(updatePack)
     .delete(deletePack)
+
 
 module.exports = tourRouter;
