@@ -1,18 +1,14 @@
+//Framework & Routes & Data Model---------------------------------
 const express = require('express');
-const fs = require('fs');
 const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
-
-//-----------------Module Files---------------------------------
+//Framework & Routes & Data Model---------------------------------
+//-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
 
-
-
-
-
-// Get json file
+// Check the Body Content before creating the JSON file
 const checkBody = (req, res, next)=>{
     if(req.body.name === undefined || req.body.price === undefined){
         res.status(400).json(notFoundRes);
@@ -23,7 +19,6 @@ const checkBody = (req, res, next)=>{
         next();
     }
 }
-
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 //GET DATA=======
 const tourCollection = async ()=>{
@@ -31,7 +26,6 @@ const tourCollection = async ()=>{
     return collection;
 }
 //Get DATA=======
-
 const notFoundRes = {
     status: 'failed',
     message: 'NOT FOUND'

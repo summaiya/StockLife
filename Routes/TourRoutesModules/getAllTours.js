@@ -1,5 +1,9 @@
+//Import===================================================
 const tourDataModel = require("../../Model/tourModeling");
 const successDataRes = require("./successResponse");
+//Import===================================================
+
+
 const getAllPacks = async (req, res)=>{
     try{
     /**
@@ -21,7 +25,8 @@ const getAllPacks = async (req, res)=>{
         queryObjFilteringString= queryObjFilteringString.replace(/\b(gte|gt|lt|lte)\b/g, (match)=>`$${match}`); //add "$" in front of the comparison
         queryObjFiltering = JSON.parse(queryObjFilteringString); //String => parse
 //=============================================  
-        let queryData = null
+        let queryData = tourDataModel.find(queryObjFiltering)
+        console.log('req.query', req.query)
     /**
      * 3)Sorting
      * Input: sort=-price,ratingAverage
@@ -29,7 +34,7 @@ const getAllPacks = async (req, res)=>{
      */ 
         if(req.query.sort){ 
             let querySort = req.query.sort.replace(",", " ");
-            queryData = await tourDataModel.find(queryObjFiltering).sort(querySort)
+            queryData = queryData.sort(querySort)
         }
     /**
      * 4)Field
@@ -37,27 +42,31 @@ const getAllPacks = async (req, res)=>{
      * output: selected infomation
      */
         else if(req.query.fields){
-            let queryField = req.query.fields.replace(",", " ");
-            queryData = await tourDataModel.find().select(queryField);
+            let queryField = req.query.fields.split(",").join(" ")
+            console.log('queryField', queryField)
+            queryData = queryData.select(queryField);
         }
     /**
      * 5)Pagination
-     * Input: skip=10,limit=10
+     * Input: page=1&limit=3
+     * Output: at page 1, there are 3 dataset
      */
-         else if(req.query.page){
-             console.log(`page ${req.query.page}, limit${req.query.limit}`)
+         else if(req.query.page && req.query.limit){
+            const queryDataLength = await tourDataModel.find(queryObjFiltering);
             const page = JSON.parse(req.query.page);
             const limit = JSON.parse(req.query.limit);
             const skip = (page - 1) * limit;
-            queryData = await tourDataModel.find().skip(skip).limit(limit)
+            if(page > (queryDataLength.length / limit)) { 
+                throw new Error ("Beyond numbers of Pages")
+            }
+            queryData = queryData.skip(skip).limit(limit)
          }
     //Normal Display
         else{
-            queryData = await tourDataModel.find(queryObjFiltering);
+            queryData = queryData.find(queryObjFiltering);
         }
-    
     //Main) Response Sent
-        res.status(200).json(await successDataRes(queryData));
+        res.status(200).json(await successDataRes(await queryData));
     }catch(error){
         console.log("error", error)
     }

@@ -1,5 +1,5 @@
 const tourDataModel = require("../../Model/tourModeling");
-
+const fs = require('fs');
 const successDataRes = async(collectionData)=>{
     // let collectionData = await tourCollection();
     if(collectionData.length === 0){
