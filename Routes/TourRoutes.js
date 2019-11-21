@@ -2,6 +2,16 @@ const express = require('express');
 const fs = require('fs');
 const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
+
+//-----------------Module Files---------------------------------
+const getAllTours = require("./TourRoutesModules/getAllTours");
+const successDataRes = require("./TourRoutesModules/successResponse");
+//-----------------Module Files---------------------------------
+
+
+
+
+
 // Get json file
 const checkBody = (req, res, next)=>{
     if(req.body.name === undefined || req.body.price === undefined){
@@ -22,68 +32,13 @@ const tourCollection = async ()=>{
 }
 //Get DATA=======
 
-//Response with Success Data
-const successDataRes = async(collectionData)=>{
-    // let collectionData = await tourCollection();
-    if(collectionData.length === 0){
-        const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
-        try{
-            collectionData = await tourDataModel.create(tourContent);
-        }catch(err){
-            console.log(err)
-        }
-    }
-    return {
-        status: 'success',
-        length: collectionData.length,
-        data: collectionData
-    }
-}
 const notFoundRes = {
     status: 'failed',
     message: 'NOT FOUND'
 }
-
-
 //ROUTE HANDLERS ---------------------------------------------------------------------------------------------------------------
-
-const getAllPacks = async (req, res)=>{
-    try{
-        
-    //1)Filtering
-        let queryObjFiltering = {...req.query}; //Get the query objects
-        console.log("filter", queryObjFiltering) //Print what is inside the query objects
-        const arrayFiltering = ["sort", "windows"] //array of words to filter out
-        arrayFiltering.forEach(element=>{
-            delete queryObjFiltering[element] //filter the query objects
-        })
-    //2)Advanced Filtering (gte, gt, lte, lt)
-        let queryObjFilteringString = JSON.stringify(queryObjFiltering); //turn Query Object into a string
-        queryObjFilteringString= queryObjFilteringString.replace(/\b(gte|gt|lt|lte)\b/g, (match)=>`$${match}`); //add "$" in front of the comparison
-        queryObjFiltering = JSON.parse(queryObjFilteringString); //String => parse
-
-    //3)Sorting
-        console.log("sorting", queryObjFiltering) //Print what is inside the query objects
-        let queryData = null
-        if(req.query.sort){ 
-            let querySort = req.query.sort.replace(",", " ");
-            queryData = await tourDataModel.find(queryObjFiltering).sort(querySort)
-            }   
-        else{
-            queryData = await tourDataModel.find(queryObjFiltering);
-        }
-    //4)Field
-        if(req.query.fields){
-            let queryField = req.query.fields.replace(",", " ");
-            // console.log("queryField", queryField)
-            queryData = await tourDataModel.find(queryObjFiltering).select("name price");
-        }
-        //Main) Response Sent
-        res.status(200).json(await successDataRes(queryData));
-    }catch(error){
-        console.log("error", error)
-    }
-}
+//getAllTours Old Space
+//Myspace---
 const createPack = (req, res)=>{
     tourDataModel.create(req.body).then(async(data)=>{
         res.status(201).json(await successDataRes());
@@ -127,7 +82,7 @@ const deletePack = async (req, res)=>{
 //All Routes ----------------------------------------------------------------------------------------------------------------
 
 tourRouter.route('/')
-    .get(getAllPacks)
+    .get(getAllTours)
     .post(checkBody, createPack)
 tourRouter.route('/:id') 
     .get(getSinglePack)
