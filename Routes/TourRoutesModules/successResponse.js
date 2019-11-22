@@ -1,19 +1,20 @@
 const tourDataModel = require("../../Model/tourModeling");
 const fs = require('fs');
 const successDataRes = async(collectionData)=>{
-    // let collectionData = await tourCollection();
-    if(collectionData.length === 0){
-        const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
-        try{
-            collectionData = await tourDataModel.create(tourContent);
-        }catch(err){
-            console.log(err)
+    if(collectionData !== null){
+        if(collectionData.length === 0){
+            const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
+            try{
+                collectionData = await tourDataModel.create(tourContent);
+            }catch(err){
+                console.log(err)
+            }
         }
     }
     return {
-        status: 'success',
-        length: collectionData.length,
-        data: collectionData
+        status: 'Successful',
+        length:  collectionData === null ? "Item Not Found": collectionData.length,
+        data: collectionData === null ? "Item Not Found": collectionData
     }
 }
 module.exports = successDataRes;

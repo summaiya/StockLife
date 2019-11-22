@@ -4,7 +4,6 @@ class ErrorHandling extends Error{
         this.statusCode = statusCode;
         this.operational = true;
         this.status = `${statusCode}`.startsWith(4) ? "Client Error" : "Server Error"
-
     }
 }
 
