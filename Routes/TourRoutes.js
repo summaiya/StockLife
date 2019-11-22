@@ -3,7 +3,6 @@ const express = require('express');
 const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
-
 //-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
 const getStats = require("./TourRoutesModules/getStats");

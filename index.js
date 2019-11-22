@@ -2,6 +2,13 @@ const color = require('colors');
 const express = require('express');
 const dotEnv = require('dotenv');
 const mongoose = require("mongoose")
+
+//Error Handing Imports======================
+const ErrorHandling = require("./util/ErrorHandling");
+//Error Handing Imports======================
+
+
+
 dotEnv.config({path : "./config.env"});
 
 //Connect Mongoose-----------------
@@ -27,14 +34,32 @@ const app = express();
 //Middlewares
     app.use(express.json());//Simple Middleware<--- It parsing json obj.
     console.log(`You are in ${process.env.NODE_ENV} Mode`.blue)
+//Dev or Pro
     if(process.env.NODE_ENV === "development"){
         app.use(morgan('dev'));
     }
-    // app.use(express.static(`${__dirname}/public`)) //<---------------------It activates the user accessibilities for all files in public folder
+// app.use(express.static(`${__dirname}/public`)) //<---------------------It activates the user accessibilities for all files in public folder
 
 //Router
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+
+//Handling wrong url: if above router didn't work, it will use the below Middleware
+app.use("*", (req, res, next)=>{
+    next(new ErrorHandling(`the orignal url is not found ${req.originalUrl}`, 404));
+})
+
+//Main Error handling
+app.use((err, req, res, next)=>{
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || "error";
+    res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
+    })
+})
+
+
 //Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, ()=>{

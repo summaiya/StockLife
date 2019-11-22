@@ -67,8 +67,7 @@ class APIFeatures {
             //     finalQuery = finalQuery.find(queryObjFiltering);
             // }
               });
-            return finalQuery
-            
+            return finalQuery       
     }
 }
 
