@@ -38,7 +38,7 @@ const notFoundRes = {
 //Myspace---
 const createPack = (req, res)=>{
     tourDataModel.create(req.body).then(async(data)=>{
-        res.status(201).json(await successDataRes());
+        res.status(201).json(await successDataRes(data));
     }).catch(err=>{
         console.log(err);
         res.status(401).json(notFoundRes)
@@ -71,7 +71,7 @@ const updatePack = async (req, res)=>{
 const deletePack = async (req, res)=>{
     try{
         const tourData = await tourDataModel.findByIdAndDelete({"_id": req.params.id});
-        res.status(200).json( await successDataRes())
+        res.status(200).json( await successDataRes(tourData))
     }catch(error){
         res.status(404).json(error)
     }
