@@ -1,23 +1,43 @@
 const tourDataModel = require("../../Model/tourModeling");
 const successDataRes = require("./successResponse");
-const getStats = async (req, res)=>{
+const getBestMonth =async (req, res)=>{
     try{
-        const stats = await tourDataModel.aggregate([
-            { 
-                $match: {} 
+        const year = 2021;
+        const bestMonth = await tourDataModel.aggregate([
+            {
+                $unwind: "$startDates"
             },
-            { 
-                $group: { 
-                    _id: "difficulty", 
-                    total: { $sum: "$price" },
-                    average: {$avg: "$price"}
-                } 
+            {
+                $match:{
+                    startDates: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`)
+                    }
+                }
+            },
+            {
+                $group:{
+                    _id: {
+                        $month: "$startDates"
+                    },
+                    count:{
+                        $sum: 1
+                    },
+                    tours:{
+                        $push: '$name'
+                    }
+                }
+            },
+            {
+                $sort: {
+                    count: -1
+                }
             }
-         ])
-        res.status(200).json(await successDataRes(stats))
-    }
-    catch(error){
+        ])
+        res.status(200).json(await successDataRes(bestMonth))
+    }catch(error){
         console.log(error)
     }
 }
-module.exports = getStats;
+
+module.exports = getBestMonth;
