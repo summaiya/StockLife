@@ -18,7 +18,8 @@
   },
   "scripts": {
     "dev": "nodemon index.js",
-    "pro": "SET NODE_ENV=production & nodemon index.js"
+    "pro": "SET NODE_ENV=production & nodemon index.js",
+    "debug": "ndb index.js"
   },
   "repository": {
     "type": "git",
