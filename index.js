@@ -4,7 +4,8 @@ const dotEnv = require('dotenv');
 const mongoose = require("mongoose")
 
 //Error Handing Imports======================
-const ErrorHandling = require("./util/ErrorHandling");
+const ErrorClass = require("./util/ErrorClass");
+const MainErrorHandler = require("./util/Main-Error-Handle")
 //Error Handing Imports======================
 
 
@@ -46,18 +47,11 @@ app.use('/api/v1/users', userRouter);
 
 //Handling wrong url: if above router didn't work, it will use the below Middleware
 app.use("*", (req, res, next)=>{
-    next(new ErrorHandling(`the orignal url is not found ${req.originalUrl}`, 404));
+    next(new ErrorClass(`the orignal url is not found ${req.originalUrl}`, 404));
 })
 
 //Main Error handling
-app.use((err, req, res, next)=>{
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || "error";
-    res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message
-    })
-})
+app.use(MainErrorHandler)
 
 
 //Listener
