@@ -5,7 +5,9 @@ const tourSchema = new mongoose.Schema({
         required: [true, "Must have a Name"],
         type: String,
         unique: true,
-        trim: true
+        trim: true,
+        maxlength: [30, "A Tour Name Must Have less than 30 characters"],
+        minlength: [6, "A Tour Name Must Have More than 6 Characters"]
     },
     duration: {
         type: Number, 
@@ -17,19 +19,31 @@ const tourSchema = new mongoose.Schema({
     },
     difficulty: {
         type: String, 
-        required: [true, "must have a difficulty"]
+        required: [true, "must have a difficulty"],
+        enum: {
+           values: ["easy", "medium", "hard"],
+           message: "Difficulty can only be easy, medium, difficult"
+        }
     }, 
     ratingAverage: {
         required: [true, "must have rating average"],
         type: Number,
-        default: 0
+        default: 0,
+        max: [6, "Maximum Rating is 5.0"],
+        min: [0, "Minimum Rating is 1.0"]
     },
     price:{
         required: [true, "must have a price"],
         type: Number
     },
     priceDiscount:{
-        type: Number
+        type: Number,
+        validate: {
+            validator: function(val){
+                return val < this.price;
+            },
+            message: "Discounted Price ({VALUE}) Must be cheaper than the actual Price"
+        }
     },
     summary:{
         type: String,
@@ -56,6 +70,14 @@ const tourSchema = new mongoose.Schema({
     }, 
     startDates: [Date]
 })
+// tourSchema.pre("save", function(next){
+//     console.log("I am in the Tourschema Middleware Pre function");
+//     next();
+// })
+// tourSchema.post("save", function(doc, next){
+//     console.log("post Tourschema Middleware".red);
+//     next();
+// })
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;

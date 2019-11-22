@@ -10,18 +10,6 @@ const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
-
-// Check the Body Content before creating the JSON file
-const checkBody = (req, res, next)=>{
-    if(req.body.name === undefined || req.body.price === undefined){
-        res.status(400).json(notFoundRes);
-        console.log('Need to include name and price')
-    }
-    else{
-        console.log('Good Content, Keep on!')
-        next();
-    }
-}
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 //GET DATA=======
 const tourCollection = async ()=>{
@@ -29,9 +17,12 @@ const tourCollection = async ()=>{
     return collection;
 }
 //Get DATA=======
-const notFoundRes = {
+const notFoundRes = (error)=>{ 
+    return {
     status: 'failed',
-    message: 'NOT FOUND'
+    message: 'NOT FOUND', 
+    error
+    }
 }
 //ROUTE HANDLERS ---------------------------------------------------------------------------------------------------------------
 //getAllTours Old Space
@@ -41,7 +32,7 @@ const createPack = (req, res)=>{
         res.status(201).json(await successDataRes(data));
     }).catch(err=>{
         console.log(err);
-        res.status(401).json(notFoundRes)
+        res.status(401).json(notFoundRes(err))
     })
 }
 const getSinglePack = async (req, res)=>{
@@ -83,7 +74,7 @@ tourRouter.route("/stats-rating")
     .get(getStats)
 tourRouter.route('/')
     .get(getAllTours)
-    .post(checkBody, createPack)
+    .post(createPack)
 tourRouter.route('/:id') 
     .get(getSinglePack)
     .patch(updatePack)
