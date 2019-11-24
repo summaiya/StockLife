@@ -1,11 +1,10 @@
 const ErrorClass = require("../../util/ErrorClass");
-const catchAsync = fn =>{
+const catchAsync = (fn, statusCode) =>{
     return (req, res, next)=>{
         fn(req,res,next).catch(err=>{
-            console.log(err)
-            next(new ErrorClass(err, 404))
+            //console.log("err.message", err)
+            next(new ErrorClass(err, statusCode))
         })
     }
 }
-
 module.exports = catchAsync

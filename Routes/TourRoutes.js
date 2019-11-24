@@ -4,7 +4,6 @@ const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
 //Error ================================
-
 const catchAsync = require("./TourRoutesModules/catchAsync");
 //Error ================================
 //-----------------Module Files-----------------------------------
@@ -13,28 +12,12 @@ const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
-//ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
-const notFoundRes = (error)=>{ 
-    return {
-    status: 'failed',
-    message: 'NOT FOUND', 
-    error
-    }
-}
-//ROUTE HANDLERS ---------------------------------------------------------------------------------------------------------------
-//getAllTours Old Space
+ //getAllTours Old Space
 //Myspace---
-const createPack = (req, res)=>{
-    tourDataModel.create(req.body).then(async(data)=>{
-        res.status(201).json(await successDataRes(data));
-    }).catch(err=>{
-        res.status(401).json(notFoundRes(err))
-    })
-}
-//===============================================================================\\
-//===============================================================================\\
-//===============================================================================
-//===============================================================================
+const createPack = catchAsync(async (req, res, next)=>{
+    const createNewTour = await tourDataModel.create(req.body);
+    res.status(201).json(await successDataRes(createNewTour));
+}, 401)
 
 const getSinglePack = catchAsync(async (req, res, next)=>{
         const ans = await tourDataModel.findById(req.params.id);
@@ -47,20 +30,20 @@ const getSinglePack = catchAsync(async (req, res, next)=>{
                 data: ans
             }
         )
-})
+}, 404)
 
 const updatePack = catchAsync(async (req, res, next)=>{
     const tour = await tourDataModel.findByIdAndUpdate({"_id": req.params.id}, req.body, {
         new: true,
         runValidators: true
     });
-    res.status(200).json(tour)
-})
+    res.status(200).json(await successDataRes(tour))
+}, 404)
 
 const deletePack = catchAsync(async (req, res)=>{
     const tourData = await tourDataModel.findByIdAndDelete({"_id": req.params.id});
      res.status(200).json( await successDataRes(tourData))
-})
+}, 404)
 //All Routes ----------------------------------------------------------------------------------------------------------------
 tourRouter.route('/top-5-best-rating')
     .get(top_five_cheap_and_best, getAllTours)

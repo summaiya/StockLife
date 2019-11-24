@@ -34,7 +34,7 @@ const userRouter = require('./Routes/UserRoutes');
 const app = express();
 //Middlewares
     app.use(express.json());//Simple Middleware<--- It parsing json obj.
-    console.log(`You are in ${process.env.NODE_ENV} Mode`.blue)
+    console.log(`You are in ${process.env.NODE_ENV}Mode`.blue)
 //Dev or Pro
     if(process.env.NODE_ENV === "development"){
         app.use(morgan('dev'));
@@ -49,11 +49,8 @@ app.use('/api/v1/users', userRouter);
 app.use("*", (req, res, next)=>{
     next(new ErrorClass(`the orignal url is not found ${req.originalUrl}`, 404));
 })
-
 //Main Error handling
 app.use(MainErrorHandler)
-
-
 //Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, ()=>{
