@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
-
+const signup = require('./UserRoutesModules/sign-upController');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
 userRouter.use((req, res, next)=>{
     console.log("I am in userRoutes");
@@ -11,7 +11,7 @@ userRouter.use((req, res, next)=>{
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 const findItem = (items, itemFind)=>{
-        return items.find(element=>element["_id"]===itemFind)
+        return items.find(element=>element["_id"]===itemFind);
 }
 const successDataRes = {
     status: 'success',
@@ -83,10 +83,11 @@ const deleteUserInfo = (req, res)=>{
 }
 
 //Router------------------------------------------------------------------------------------------
+userRouter.route('/signup')
+    .post(signup)
 userRouter.route('/')
     .get(getAllUser)
     .post(createUser)
-
 userRouter.route('/:id')
     .patch(changeUserInfo)
     .delete(deleteUserInfo)

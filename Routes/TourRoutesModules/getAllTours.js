@@ -1,9 +1,9 @@
 
 //Import===================================================
 const tourDataModel = require("../../Model/tourModeling");
-const successDataRes = require("./successResponse");
+const successDataRes = require("../controllers/successResponse");
 const apiFeatures = require("../../util/apiFeatures");
-const catchAsync = require("./catchAsync");
+const catchAsync = require("../controllers/catchAsync");
 //Import===================================================
 const getAllPacks = catchAsync(async (req, res)=>{
     const tourAPIFeatures = new apiFeatures(req.query, tourDataModel).sortFieldPagination();

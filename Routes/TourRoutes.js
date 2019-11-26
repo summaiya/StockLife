@@ -4,13 +4,13 @@ const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
 //Error ================================
-const catchAsync = require("./TourRoutesModules/catchAsync");
+const catchAsync = require("./controllers/catchAsync");
 //Error ================================
 //-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
 const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
-const successDataRes = require("./TourRoutesModules/successResponse");
+const successDataRes = require("./controllers/successResponse");
 //-----------------Module Files---------------------------------
  //getAllTours Old Space
 const createPack = catchAsync(async (req, res, next)=>{
@@ -51,7 +51,7 @@ tourRouter.route("/stats-rating")
 tourRouter.route('/')
     .get(getAllTours)
     .post(createPack)
-tourRouter.route('/:id') 
+tourRouter.route('/:id')
     .get(getSinglePack)
     .patch(updatePack)
     .delete(deletePack)

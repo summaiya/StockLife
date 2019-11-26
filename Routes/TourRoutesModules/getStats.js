@@ -1,5 +1,5 @@
 const tourDataModel = require("../../Model/tourModeling");
-const successDataRes = require("./successResponse");
+const successDataRes = require("../controllers/successResponse");
 const getBestMonth = async (req, res)=>{
     try{
         const year = 2021;
