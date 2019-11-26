@@ -1,6 +1,10 @@
 const UserModel = require("../../Model/userModeling");
 const catchAsync = require("../controllers/catchAsync");
 const successDataRes = require("../controllers/successResponse");
+const jwt = require("jsonwebtoken");
+
+
+
 const signupUser = catchAsync(async(req, res, next)=>{
     const newUserData = await UserModel.create({
         name: req.body.name,

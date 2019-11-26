@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
-const signup = require('./UserRoutesModules/sign-upController');
+const signup = require('./UserRoutesModules/sign-up');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
 userRouter.use((req, res, next)=>{
     console.log("I am in userRoutes");
