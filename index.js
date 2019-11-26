@@ -43,7 +43,7 @@ const app = express();
     if(process.env.NODE_ENV === "development"){
         app.use(morgan('dev'));
     }
-// app.use(express.static(`${__dirname}/public`)) //<---------------------It activates the user accessibilities for all files in public folder
+//app.use(express.static(`${__dirname}/public`)) //<---------------------It activates the user accessibilities for all files in public folder
 
 //Router
 app.use('/api/v1/tours', tourRouter);
