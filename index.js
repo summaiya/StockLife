@@ -1,18 +1,27 @@
+//Import ================================================================================
+//Import Frameworks ===================================
 const color = require('colors');
 const express = require('express');
 const dotEnv = require('dotenv');
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
+const morgan = require('morgan');
+//Import Frameworks ==================================
 //Error Handing Imports======================
 const ErrorClass = require("./util/ErrorClass");
 const MainErrorHandler = require("./util/Main-Error-Handle")
 //Error Handing Imports======================
-
-
-
 dotEnv.config({path : "./config.env"});
+//Import Files =====================================
+const tourRouter = require('./Routes/TourRoutes');
+const userRouter = require('./Routes/UserRoutes');
+//Import Files =====================================
+//Import ==================================================================================
 
-//Connect Mongoose-----------------
+
+
+
+
+//Connect Mongoose============================
 const databaseConnectApp = process.env.DATABASE.replace("<password>", process.env.DATABASE_PASSWORD); //Replace the password
 mongoose.connect(databaseConnectApp, {
     'useNewUrlParser': true,
@@ -20,14 +29,9 @@ mongoose.connect(databaseConnectApp, {
     'useCreateIndex': true,
     "useUnifiedTopology": true
 }).then((data)=>{
-    // console.log("data", data)
     console.log("Database Connected")
-}).catch(error=>console.log("Error:", error))
-//Connect Mongoose-----------------
-const morgan = require('morgan');
-const tourRouter = require('./Routes/TourRoutes');
-const userRouter = require('./Routes/UserRoutes');
-
+}).catch(error=>console.log("Not Connected! Error:", error))
+//Connect Mongoose=============================
 
 
 //Activate Express
@@ -35,7 +39,7 @@ const app = express();
 //Middlewares
     app.use(express.json());//Simple Middleware<--- It parsing json obj.
     console.log(`You are in ${process.env.NODE_ENV}Mode`.blue)
-//Dev or Pro
+//Dev Speical
     if(process.env.NODE_ENV === "development"){
         app.use(morgan('dev'));
     }

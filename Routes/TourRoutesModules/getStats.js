@@ -1,6 +1,6 @@
 const tourDataModel = require("../../Model/tourModeling");
 const successDataRes = require("./successResponse");
-const getBestMonth =async (req, res)=>{
+const getBestMonth = async (req, res)=>{
     try{
         const year = 2021;
         const bestMonth = await tourDataModel.aggregate([

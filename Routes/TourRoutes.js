@@ -13,7 +13,6 @@ const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./TourRoutesModules/successResponse");
 //-----------------Module Files---------------------------------
  //getAllTours Old Space
-//Myspace---
 const createPack = catchAsync(async (req, res, next)=>{
     const createNewTour = await tourDataModel.create(req.body);
     res.status(201).json(await successDataRes(createNewTour));

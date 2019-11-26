@@ -2,6 +2,9 @@ const tourDataModel = require("../../Model/tourModeling");
 const fs = require('fs');
 const successDataRes = async(collectionData)=>{
     if(collectionData !== null){
+        /**
+         * Insert Default Data
+         */
         if(collectionData.length === 0){
             const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
             try{

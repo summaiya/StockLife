@@ -29,8 +29,8 @@ const tourSchema = new mongoose.Schema({
         required: [true, "must have rating average"],
         type: Number,
         default: 0,
-        max: [6, "Maximum Rating is 5.0"],
-        min: [0, "Minimum Rating is 1.0"]
+        max: [5, "Maximum Rating is 5.0"],
+        min: [1, "Minimum Rating is 1.0"]
     },
     price:{
         required: [true, "must have a price"],
@@ -70,14 +70,6 @@ const tourSchema = new mongoose.Schema({
     }, 
     startDates: [Date]
 })
-// tourSchema.pre("save", function(next){
-//     console.log("I am in the Tourschema Middleware Pre function");
-//     next();
-// })
-// tourSchema.post("save", function(doc, next){
-//     console.log("post Tourschema Middleware".red);
-//     next();
-// })
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
