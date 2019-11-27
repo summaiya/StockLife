@@ -47,3 +47,22 @@ exports.signup = catchAsync(async(req, res, next)=>{
     const jwtToken = jwtTokenGenerator(newUserData["_id"]);
     res.status(201).json(await successDataRes(newUserData, jwtToken))
 }, 401)
+
+exports.protectRoute = catchAsync(async (req, res, next)=>{
+    let token;
+    //1)Check if token exists (all tokens must start with "Bearer")
+    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+        token = req.headers.authorization.replace("Bearer ", "");//remove the "Bearer"
+    }
+    //2)validate the token (verify the signture is valid or not ===> verification)
+    if(!token){
+        return next(new ErrorClass("You must log in first", 401))
+    }
+    //3)Check if the user still exists
+    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS);
+    console.log(data);
+    
+    //4)check if the password was changed
+    console.log("I am in middleware man1");
+    next();
+}, 404)

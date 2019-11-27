@@ -2,7 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`));
-const {signup, login} = require("./UserAuth/userAuth");
+const {signup, login, protectRoute} = require("./UserAuth/userAuth");
 // const signup = require('./UserRoutesModules/sign-up');
 // const login = require("./UserRoutesModules/login");
 //Fail and Success Response==========================
@@ -90,7 +90,7 @@ userRouter.route('/signup')
 userRouter.route("/login")
     .get(login)
 userRouter.route('/')
-    .get(getAllUser)
+    .get(protectRoute, getAllUser)
     .post(createUser)
 userRouter.route('/:id')
     .patch(changeUserInfo)
