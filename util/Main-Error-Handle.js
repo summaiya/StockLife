@@ -36,6 +36,20 @@ module.exports = (err, req, res, next)=>{
                 }
                 clearError = new ErrorClass(message.join(". "), clearError.statusCode)
             }
+        /**
+         * Wrong Web Token
+         */
+            else if (clearError.error.name === "JsonWebTokenError"){
+                clearError.error.message = "Wrong Web Token"
+                clearError = new ErrorClass(clearError.error, clearError.statusCode)
+            }
+        /**
+         * Expire Web Token
+         */
+            else if (clearError.error.name === "TokenExpiredError"){
+                clearError.error.message = "Web Token Expired";
+                clearError = new ErrorClass(clearError.error, clearError.statusCode)
+            }
         res.status(err.statusCode).json(productionResponse(clearError))
     }
 }

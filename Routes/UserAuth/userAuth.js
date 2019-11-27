@@ -58,11 +58,9 @@ exports.protectRoute = catchAsync(async (req, res, next)=>{
     if(!token){
         return next(new ErrorClass("You must log in first", 401))
     }
-    //3)Check if the user still exists
-    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS);
-    console.log(data);
-    
+    //3)Check if the user exists of not
+    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS);  
+    console.log("req.body", req.body)
     //4)check if the password was changed
-    console.log("I am in middleware man1");
     next();
 }, 404)
