@@ -2,6 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
 const signup = require('./UserRoutesModules/sign-up');
+const login = require("./UserRoutesModules/login");
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
 userRouter.use((req, res, next)=>{
     console.log("I am in userRoutes");
@@ -85,6 +86,8 @@ const deleteUserInfo = (req, res)=>{
 //Router------------------------------------------------------------------------------------------
 userRouter.route('/signup')
     .post(signup)
+userRouter.route("/login")
+    .get(login)
 userRouter.route('/')
     .get(getAllUser)
     .post(createUser)

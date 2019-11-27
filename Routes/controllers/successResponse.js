@@ -1,6 +1,6 @@
 const tourDataModel = require("../../Model/tourModeling");
 const fs = require('fs');
-const successDataRes = async(collectionData)=>{
+const successDataRes = async(collectionData, token)=>{
     if(collectionData !== null){
         /**
          * Insert Default Data
@@ -16,8 +16,10 @@ const successDataRes = async(collectionData)=>{
     }
     return {
         status: 'Successful',
+        token: token ? token : undefined,
         length:  collectionData === null ? "Item Not Found": collectionData.length,
-        data: collectionData === null ? "Item Not Found": collectionData
+        data: collectionData === null ? "Item Not Found": collectionData,
+        
     }
 }
 module.exports = successDataRes;
