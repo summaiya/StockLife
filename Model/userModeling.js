@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         required: [true, "must have a password"],
-        type: String
+        type: String,
+        select: false
     },
     passwordConfirm: {
         required: [true, "must match the previous password"],

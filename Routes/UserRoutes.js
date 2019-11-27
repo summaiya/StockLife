@@ -1,14 +1,16 @@
 const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
+const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`));
+
 const signup = require('./UserRoutesModules/sign-up');
 const login = require("./UserRoutesModules/login");
-const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
-userRouter.use((req, res, next)=>{
-    console.log("I am in userRoutes");
-    next();
-})
+//Fail and Success Response==========================
+const catchAsync = require("./controllers/catchAsync");
+const successDataResponse = require("./controllers/successResponse");
+//Fail and Success Response==========================
 
+const userModeling = require("../Model/userModeling");
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
 const findItem = (items, itemFind)=>{
@@ -32,9 +34,10 @@ const writeFileFunc = (HTTPMethods)=>{
 }
 
 //ROUTE HANDLERS ---------------------------------------------------------------------------------------------------------------
-const getAllUser = (req, res)=>{
-    res.status(200).json(successDataRes);
-}
+const getAllUser = catchAsync(async (req, res)=>{
+    const User = await userModeling.find().select("+password");
+     res.status(200).json(await successDataResponse(User));
+}, 404)
 const createUser = (req, res)=>{
     const newId =  userData[userData.length-1]["_id"] + 1;
     const newPack = Object.assign({"_id": newId}, req.body);

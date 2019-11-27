@@ -10,5 +10,5 @@ const getAllPacks = catchAsync(async (req, res)=>{
 //=============================================  
     //Main) Response Sent
     res.status(200).json(await successDataRes(await tourAPIFeatures));
-})
+}, 404)
 module.exports = getAllPacks;
