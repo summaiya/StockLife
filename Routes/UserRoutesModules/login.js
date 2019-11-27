@@ -1,6 +1,6 @@
 const ErrorClass = require("../../util/ErrorClass");
 const userModeling = require("../../Model/userModeling");
-const successRes = require(".././controllers/successResponse")
+const successDataRes = require(".././controllers/successResponse")
 const bcrypt = require('bcryptjs');
 const login = async (req, res, next)=>{
     const {email, password} = req.body;
@@ -20,8 +20,7 @@ const login = async (req, res, next)=>{
             return next(new ErrorClass("Email or Password wasn't correct, please try again!", 400));
         }
         else{
-            console.log("I am here")
-            next()
+            next(await successDataRes(user))
         }
 }
 
