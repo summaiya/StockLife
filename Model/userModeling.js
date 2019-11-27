@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
+    role: {
+        type: String,
+        enum: ["user", "admin", "guide"]
+    },
     password: {
         required: [true, "must have a password"],
         type: String,
