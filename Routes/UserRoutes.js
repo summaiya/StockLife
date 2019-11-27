@@ -2,9 +2,9 @@ const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`));
-
-const signup = require('./UserRoutesModules/sign-up');
-const login = require("./UserRoutesModules/login");
+const {signup, login} = require("./UserAuth/userAuth");
+// const signup = require('./UserRoutesModules/sign-up');
+// const login = require("./UserRoutesModules/login");
 //Fail and Success Response==========================
 const catchAsync = require("./controllers/catchAsync");
 const successDataResponse = require("./controllers/successResponse");
@@ -59,8 +59,6 @@ const getUserInfo = (req, res)=>{
     }
 }
 const changeUserInfo = (req, res)=>{
-    // console.log(req.params.id)
-    // console.log(typeof req.params.id)
     const currentPack = findItem(userData, req.params.id);
     if(currentPack !== undefined){
         const inputData = req.body; //NEW Incoming Data
