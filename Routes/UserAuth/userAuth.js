@@ -92,24 +92,24 @@ exports.resetPassword = (req, res, next)=>{
 exports.forgotPassword = catchAsync(async (req, res, next)=>{
     const {email} = req.body
     //1) Get User Email to get user info
-    const user = await userModeling.findOne({email})
-    if(!user){
-        return next(new ErrorClass("User Doesn't Exists", 404))
-    }
+        const user = await userModeling.findOne({email})
+        if(!user){
+            return next(new ErrorClass("User Doesn't Exists", 404))
+        }
     //2) Generate a new token
-    const resetToken = user.createPasswordResetToken();
-    console.log('resetToken', resetToken)
-    await user.save({ validateBeforeSave: false });
+        const resetToken = user.createPasswordResetToken();
+        console.log('resetToken', resetToken)
+        await user.save({ validateBeforeSave: false });
     //3) Send it to the user's email
-    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
-    await sendEmail({
-        to: user.email,
-        from: 'TravelTour <traveltour@support.com>',
-        subject: "Your password reset token has sent. Please set your password within 10 min",
-        text: message
-    })
-    res.status(200).json({
-        status: "success",
-        message: "Token Sent To Email"
-    })
-})
+        const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
+        await sendEmail({
+            to: user.email,
+            from: 'TravelTour <traveltour@support.com>',
+            subject: "Your password reset token has sent. Please set your password within 10 min",
+            text:  `here is the reset URL ${resetURL}`
+        })
+        res.status(200).json({
+            status: "success",
+            message: "Token Sent To Email"
+        })
+}, 404)
