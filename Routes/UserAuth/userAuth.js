@@ -3,7 +3,8 @@ const userModeling = require("../../Model/userModeling");
 const successDataRes = require("../controllers/successResponse")
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-const catchAsync = require("../controllers/catchAsync")
+const catchAsync = require("../controllers/catchAsync");
+const crypto = require('crypto');
 
 
 //================================================================================
@@ -88,18 +89,19 @@ exports.resetPassword = (req, res, next)=>{
     })
 }
 
-exports.forgotPassword = catchAsync((req, res, next)=>{
-    // const {email} = req.body
-    // console.log(email)
+exports.forgotPassword = catchAsync(async (req, res, next)=>{
+    const {email} = req.body
     //1) Get User Email to get user info
-    // const user = await userModeling.find({})
-
+    const user = await userModeling.findOne({email})
+    if(!user){
+        return next(new ErrorClass("User Doesn't Exists", 404))
+    }
+    console.log(user)
     //2) Generate a new token
-
-
+   const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
     //3) Send it to the user's email
-    console.log('forgotPassword')
     res.status(200).json({
         message: "Nice"
     })
-}, 404)
+})
