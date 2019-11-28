@@ -8,11 +8,25 @@ const sendEmail = require("../../util/email");
 const crypto = require('crypto');
 
 
+
+
 //================================================================================
 const jwtTokenGenerator = (userId)=>{
     return jwt.sign({userId}, process.env.JWT_SECRET_PASS, {
         expiresIn: process.env.JWT_EXPIRES_IN
     })
+}
+const resetPasswordFunction = async (userData, password, passwordConfirm)=>{
+    //3) Replace the input password to the current password
+    userData.password = password;
+    userData.passwordConfirm = passwordConfirm;
+    userData.passwordResetToken = undefined;
+    userData.passwordResetExpires = undefined;
+    await userData.save();
+   
+    const newJWTToken = jwtTokenGenerator(userData["_id"])
+    return newJWTToken
+    
 }
 //================================================================================
 exports.login = catchAsync(async (req, res, next)=>{
@@ -26,7 +40,7 @@ exports.login = catchAsync(async (req, res, next)=>{
 
     //2.5) Check if email and password are correct
         /**
-         * bcrypt.compare compare the unhashed password vs hashed password
+         * .compare compare the unhashed password vs hashed password
          */
     const matchPassword = await bcrypt.compare(password, user[0].password);
     //3)send token to client;
@@ -55,9 +69,12 @@ exports.signup = catchAsync(async(req, res, next)=>{
 exports.protectRoute = catchAsync(async (req, res, next)=>{
     let token;
     //1)Check if token exists (all tokens must start with "Bearer")
+    console.log('req.headers.authorization', req.headers.authorization)
+    
         if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
             token = req.headers.authorization.replace("Bearer ", "");//remove the "Bearer"
         }
+    console.log('token', token)
     //2)validate the token (verify the signture is valid or not ===> verification)
         if(!token){
             return next(new ErrorClass("You must log in first", 401))
@@ -74,12 +91,12 @@ exports.protectRoute = catchAsync(async (req, res, next)=>{
 //================================================================================
 exports.restrictTo = (...roles)=>{
     return catchAsync(async (req, res,next)=>{
-        const userData = await userModeling.find({ "_id" : req.user.userId})
-        roles.forEach(el=>{
-            if(el !== userData[0].role){
-                next(new ErrorClass(`You are not ${roles.join(" OR ")}. Therefore, you can't go here`), 403)
-            }
-        })
+        const userData = await userModeling.findOne({ "_id" : req.user.userId})
+            roles.forEach(el=>{
+                if(el !== userData.role){
+                    next(new ErrorClass(`You are not ${roles.join(" OR ")}. Therefore, you can't go here`), 403)
+                }
+            })
          next();
     }, 404)
 }
@@ -89,12 +106,12 @@ exports.resetPassword = catchAsync(async (req, res, next)=>{
         const resetToken = req.params.token;
         if(!resetToken){
             return next(new ErrorClass("Please include the token to the URL"), 400)
-        }
+            }
     //2) Encrypt the Reset token to see if it matches the this.passwordRestToken
         const crypoResetToken = crypto
-        .createHash('sha256') //hash algorithm
-        .update(resetToken)
-        .digest('hex');
+            .createHash('sha256') //hash algorithm
+            .update(resetToken)
+            .digest('hex');
 
         const userData = await userModeling.findOne({
             "passwordResetToken":crypoResetToken,
@@ -104,17 +121,16 @@ exports.resetPassword = catchAsync(async (req, res, next)=>{
         if(userData === null){
             return next(new ErrorClass("Token is expired"), 401)
         }
-        userData.password = req.body.password;
-        userData.passwordConfirm = req.body.passwordConfirm;
-        userData.passwordResetToken = undefined;
-        userData.passwordResetExpires = undefined;
-        await userData.save();
-        // if(crypoPassword === )
+        
     //3) Replace the input password to the current password
+    
+    
+    const newJWTToken = await resetPasswordFunction(userData, req.body.password, req.body.passwordConfirm)
+    res.status(200).json({
+        status: "success",
+        token: newJWTToken
+    })
 
-        res.status(200).json({
-            message: "Nice"
-        })
 }, 404)
 //================================================================================
 exports.forgotPassword = catchAsync(async (req, res, next)=>{
@@ -140,4 +156,24 @@ exports.forgotPassword = catchAsync(async (req, res, next)=>{
             status: "success",
             message: "Token Sent To Email"
         })
+}, 404)
+//================================================================================
+exports.updatePassword = catchAsync(async (req, res, next)=>{
+    //1) Find the User using its id
+    const currentUser = await userModeling.findOne({"_id": req.user.userId}).select("+password");
+    console.log('currentUser', currentUser)
+    //2) Check if current password is correct or not
+    const matchPassword = await bcrypt.compare(req.body.currentPassword, currentUser.password);
+    console.log('req.body.currentPassword', req.body.currentPassword)
+    console.log('matchPassword', matchPassword)
+    if(matchPassword === false){
+        return next( new ErrorClass("Please enter the correct password before update the new password", 401))
+    }
+    //3) Reset the Password
+    const newJWTToken = await resetPasswordFunction(currentUser, req.body.password, req.body.passwordConfirm)
+    //4) Send the Response to the POSTMAN
+    res.status(200).json({
+        status: "success",
+        token: newJWTToken
+    })
 }, 404)
