@@ -4,7 +4,7 @@ const successDataRes = require("../controllers/successResponse")
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../controllers/catchAsync");
-const crypto = require('crypto');
+const sendEmail = require("../../util/email");
 
 
 //================================================================================
@@ -88,7 +88,7 @@ exports.resetPassword = (req, res, next)=>{
         message: "Nice"
     })
 }
-
+//================================================================================
 exports.forgotPassword = catchAsync(async (req, res, next)=>{
     const {email} = req.body
     //1) Get User Email to get user info
@@ -96,12 +96,20 @@ exports.forgotPassword = catchAsync(async (req, res, next)=>{
     if(!user){
         return next(new ErrorClass("User Doesn't Exists", 404))
     }
-    console.log(user)
     //2) Generate a new token
-   const resetToken = user.createPasswordResetToken();
+    const resetToken = user.createPasswordResetToken();
+    console.log('resetToken', resetToken)
     await user.save({ validateBeforeSave: false });
     //3) Send it to the user's email
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`
+    await sendEmail({
+        to: user.email,
+        from: 'TravelTour <traveltour@support.com>',
+        subject: "Your password reset token has sent. Please set your password within 10 min",
+        text: message
+    })
     res.status(200).json({
-        message: "Nice"
+        status: "success",
+        message: "Token Sent To Email"
     })
 })
