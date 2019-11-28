@@ -2,7 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const fs = require('fs');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`));
-const {signup, login, protectRoute} = require("./UserAuth/userAuth");
+const {signup, login, protectRoute, restrictTo, resetPassword, forgotPassword} = require("./UserAuth/userAuth");
 // const signup = require('./UserRoutesModules/sign-up');
 // const login = require("./UserRoutesModules/login");
 //Fail and Success Response==========================
@@ -85,16 +85,20 @@ const deleteUserInfo = (req, res)=>{
 }
 
 //Router------------------------------------------------------------------------------------------
+userRouter.route("/forgotPassword")
+    .post(forgotPassword)
+userRouter.route("/resetPassword")
+    .post(resetPassword)
 userRouter.route('/signup')
     .post(signup)
 userRouter.route("/login")
     .get(login)
 userRouter.route('/')
-    .get(protectRoute, getAllUser)
-    .post(createUser)
+    .get(protectRoute, restrictTo("admin"), getAllUser)
+    //.post(createUser)<=====================================Useless
 userRouter.route('/:id')
     .patch(changeUserInfo)
-    .delete(deleteUserInfo)
+    .delete(protectRoute, restrictTo("admin"), deleteUserInfo)
     .get(getUserInfo)
 
 module.exports = userRouter

@@ -21,6 +21,7 @@ exports.login = catchAsync(async (req, res, next)=>{
     }
     //2)Check if user exists
     const user = await userModeling.find({email}).select("+password");
+
     //2.5) Check if email and password are correct
         /**
          * bcrypt.compare compare the unhashed password vs hashed password
@@ -31,7 +32,7 @@ exports.login = catchAsync(async (req, res, next)=>{
             return next(new ErrorClass("Email or Password wasn't correct, please try again!", 400));
         }
         else{ 
-            const jwtToken = jwtTokenGenerator(user["_id"])
+            const jwtToken = jwtTokenGenerator(user[0]["_id"])
             res.status(200).json(await successDataRes(user, jwtToken))
         }
 }, 404)
@@ -39,6 +40,7 @@ exports.login = catchAsync(async (req, res, next)=>{
 exports.signup = catchAsync(async(req, res, next)=>{
     const newUserData = await userModeling.create({
         name: req.body.name,
+        role: req.body.role,
         email: req.body.email,
         photo: req.body.photo,
         password: req.body.password,
@@ -47,7 +49,7 @@ exports.signup = catchAsync(async(req, res, next)=>{
     const jwtToken = jwtTokenGenerator(newUserData["_id"]);
     res.status(201).json(await successDataRes(newUserData, jwtToken))
 }, 401)
-
+//================================================================================
 exports.protectRoute = catchAsync(async (req, res, next)=>{
     let token;
     //1)Check if token exists (all tokens must start with "Bearer")
@@ -59,8 +61,45 @@ exports.protectRoute = catchAsync(async (req, res, next)=>{
         return next(new ErrorClass("You must log in first", 401))
     }
     //3)Check if the user exists of not
-    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS);  
-    console.log("req.body", req.body)
+    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS); 
+    if(!data){
+        return next(new ErrorClass("Wrong web token"), 401)
+    }
     //4)check if the password was changed
+    req.user = data;
     next();
+}, 404);
+//================================================================================
+exports.restrictTo = (...roles)=>{
+    return catchAsync(async (req, res,next)=>{
+        const userData = await userModeling.find({ "_id" : req.user.userId})
+        roles.forEach(el=>{
+            if(el !== userData[0].role){
+                next(new ErrorClass(`You are not ${roles.join(" OR ")}. Therefore, you can't go here`), 403)
+            }
+        })
+         next();
+    }, 404)
+}
+exports.resetPassword = (req, res, next)=>{
+    console.log('resetPassword')
+    res.status(200).json({
+        message: "Nice"
+    })
+}
+
+exports.forgotPassword = catchAsync((req, res, next)=>{
+    // const {email} = req.body
+    // console.log(email)
+    //1) Get User Email to get user info
+    // const user = await userModeling.find({})
+
+    //2) Generate a new token
+
+
+    //3) Send it to the user's email
+    console.log('forgotPassword')
+    res.status(200).json({
+        message: "Nice"
+    })
 }, 404)
