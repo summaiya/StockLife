@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../controllers/catchAsync");
 const sendEmail = require("../../util/email");
+const crypto = require('crypto');
 
 
 //================================================================================
@@ -54,18 +55,18 @@ exports.signup = catchAsync(async(req, res, next)=>{
 exports.protectRoute = catchAsync(async (req, res, next)=>{
     let token;
     //1)Check if token exists (all tokens must start with "Bearer")
-    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
-        token = req.headers.authorization.replace("Bearer ", "");//remove the "Bearer"
-    }
+        if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+            token = req.headers.authorization.replace("Bearer ", "");//remove the "Bearer"
+        }
     //2)validate the token (verify the signture is valid or not ===> verification)
-    if(!token){
-        return next(new ErrorClass("You must log in first", 401))
-    }
+        if(!token){
+            return next(new ErrorClass("You must log in first", 401))
+        }
     //3)Check if the user exists of not
-    const data = await jwt.verify(token, process.env.JWT_SECRET_PASS); 
-    if(!data){
-        return next(new ErrorClass("Wrong web token"), 401)
-    }
+        const data = await jwt.verify(token, process.env.JWT_SECRET_PASS); 
+        if(!data){
+            return next(new ErrorClass("Wrong web token"), 401)
+        }
     //4)check if the password was changed
     req.user = data;
     next();
@@ -82,12 +83,39 @@ exports.restrictTo = (...roles)=>{
          next();
     }, 404)
 }
-exports.resetPassword = (req, res, next)=>{
-    console.log('resetPassword')
-    res.status(200).json({
-        message: "Nice"
-    })
-}
+//================================================================================
+exports.resetPassword = catchAsync(async (req, res, next)=>{
+    //1) Capture the Reset Token + filter
+        const resetToken = req.params.token;
+        if(!resetToken){
+            return next(new ErrorClass("Please include the token to the URL"), 400)
+        }
+    //2) Encrypt the Reset token to see if it matches the this.passwordRestToken
+        const crypoResetToken = crypto
+        .createHash('sha256') //hash algorithm
+        .update(resetToken)
+        .digest('hex');
+
+        const userData = await userModeling.findOne({
+            "passwordResetToken":crypoResetToken,
+            "passwordResetExpires": {$gt: Date.now()}
+        }).select("+password")
+
+        if(userData === null){
+            return next(new ErrorClass("Token is expired"), 401)
+        }
+        userData.password = req.body.password;
+        userData.passwordConfirm = req.body.passwordConfirm;
+        userData.passwordResetToken = undefined;
+        userData.passwordResetExpires = undefined;
+        await userData.save();
+        // if(crypoPassword === )
+    //3) Replace the input password to the current password
+
+        res.status(200).json({
+            message: "Nice"
+        })
+}, 404)
 //================================================================================
 exports.forgotPassword = catchAsync(async (req, res, next)=>{
     const {email} = req.body

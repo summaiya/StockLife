@@ -87,7 +87,7 @@ const deleteUserInfo = (req, res)=>{
 //Router------------------------------------------------------------------------------------------
 userRouter.route("/forgotPassword")
     .post(forgotPassword)
-userRouter.route("/resetPassword")
+userRouter.route("/resetPassword/:token")
     .post(resetPassword)
 userRouter.route('/signup')
     .post(signup)
