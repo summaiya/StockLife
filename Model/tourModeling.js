@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const color = require("colors");
+const userModeling = require("./userModeling");
 const tourSchema = new mongoose.Schema({
     name: {
         required: [true, "Must have a Name"],
@@ -21,7 +22,7 @@ const tourSchema = new mongoose.Schema({
         type: String, 
         required: [true, "must have a difficulty"],
         enum: {
-           values: ["easy", "medium", "hard"],
+           values: ["easy", "medium", "difficult"],
            message: "Difficulty can only be easy, medium, difficult"
         }
     }, 
@@ -30,7 +31,7 @@ const tourSchema = new mongoose.Schema({
         type: Number,
         default: 0,
         max: [5, "Maximum Rating is 5.0"],
-        min: [1, "Minimum Rating is 1.0"]
+        min: [0, "Minimum Rating is 0"]
     },
     price:{
         required: [true, "must have a price"],
@@ -68,7 +69,39 @@ const tourSchema = new mongoose.Schema({
          type: Date,
         default: Date.now()
     }, 
-    startDates: [Date]
+    startDates: [Date],
+    startLocation: {
+        type: {
+            type: String, 
+            default: "Point",
+            enum: ["Point"]
+        },
+        coordinates: [Number],
+        address: String,
+        description: String
+    },
+    location: [
+        {
+            type: {
+                type: String, 
+                default: "Point",
+                enum: ["Point"]
+            },
+            coordinates: [Number],
+            address: String,
+            description: String
+        }
+    ],
+    admins: Array
+})
+tourSchema.pre("save", async function (next){
+    const arrayOfIds = this.admins;
+    const arrayOfUsers = arrayOfIds.map( async(currentId) =>{
+        const userData = await userModeling.findById(currentId);
+        return userData
+    })
+    this.admins = await Promise.all(arrayOfUsers)
+    next();
 })
 const Tour = new mongoose.model("Tour", tourSchema);
 

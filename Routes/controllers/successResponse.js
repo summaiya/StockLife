@@ -6,12 +6,7 @@ const successDataRes = async(collectionData, token)=>{
          * Insert Default Data
          */
         if(collectionData.length === 0){
-            const tourContent = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
-            try{
-                collectionData = await tourDataModel.create(tourContent);
-            }catch(err){
-                console.log(err)
-            }
+            console.log("I guess the database wasn't connect and the CRUD process didn't work man!".red)
         }
     }
     return {
