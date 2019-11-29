@@ -92,17 +92,23 @@ const tourSchema = new mongoose.Schema({
             description: String
         }
     ],
-    admins: Array
+    admins: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "User" // Create a reference to User Data model
+        }
+    ]
 })
-tourSchema.pre("save", async function (next){
-    const arrayOfIds = this.admins;
-    const arrayOfUsers = arrayOfIds.map( async(currentId) =>{
-        const userData = await userModeling.findById(currentId);
-        return userData
-    })
-    this.admins = await Promise.all(arrayOfUsers)
-    next();
-})
+// tourSchema.pre("save", async function (next){
+//     const arrayOfIds = this.admins;
+//     const arrayOfUsers = arrayOfIds.map( async(currentId) =>{
+//         const userData = await userModeling.findById(currentId);
+//         return userData
+//     })
+//     this.admins = await Promise.all(arrayOfUsers)
+//     next();
+// })
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
+//Schema ==> Model
