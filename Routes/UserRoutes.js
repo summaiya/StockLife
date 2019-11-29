@@ -36,13 +36,6 @@ const getAllUser = catchAsync(async (req, res)=>{
     const User = await userModeling.find().select("+password");
      res.status(200).json(await successDataResponse(User));
 }, 404)
-const createUser = (req, res)=>{
-    const newId =  userData[userData.length-1]["_id"] + 1;
-    const newPack = Object.assign({"_id": newId}, req.body);
-    userData.push(newPack);
-    writeFileFunc('Create');
-    res.status(201).json(successDataRes);    //SEND JSON version
-}
 const getUserInfo = (req, res)=>{
     const ans = findItem(userData, (req.params.id));
     if(ans === undefined){
@@ -82,17 +75,13 @@ const updateUserDatafromUser = catchAsync(async (req, res, next)=>{
             })
 }, 404)
 
-const deleteUserInfo = (req, res)=>{
-    const deletePack = findItem(userData,(req.params.id));
-   if(deletePack !== undefined){
-        userData.splice(userData.indexOf(deletePack), 1);
-        writeFileFunc('DELETE')
-        res.status(200).json(successDataRes)
-   }
-   else{
-    res.status(404).json(notFoundRes)
-   }
-}
+const deleteUserInfo = catchAsync(async (req, res, next)=>{
+    await userModeling.findByIdAndDelete(req.user.userId)
+    res.status(200).json({
+        status: "Successful",
+        message: "We successfully deleted this user"
+    })
+}, 404)
 
 //Router------------------------------------------------------------------------------------------
 /**
@@ -111,7 +100,7 @@ userRouter.route("/resetPassword/:token")
  * Functions: Update password without (fogot password ==> reset password)
  * Limited: to everyone
  */
-userRouter.route("/updatePassword")
+userRouter.route("/update-password")
     .patch(protectRoute, updatePassword)
 /**
  * Functions: Sign up
@@ -135,14 +124,16 @@ userRouter.route('/')
  * Functions: Change Current User Info from user side
  * Limited: everyone
  */
-userRouter.route("/updateUser-user")
+userRouter.route("/update-me-user")
     .patch(protectRoute, updateUserDatafromUser)
 /**
- * Functions: Change, Delete, get single user
- * Limited: users and admins
+ * Functions: Delete current user
+ * Limited: current user
  */
-userRouter.route('/:id')
-    .delete(protectRoute, restrictTo("admin"), deleteUserInfo)
-    .get(getUserInfo)
+userRouter.route("/delete-me-user")
+    .delete(protectRoute, deleteUserInfo)
+// userRouter.route('/:id')
+//     .delete(protectRoute, restrictTo("admin"), deleteUserInfo)
+//     .get(getUserInfo)
 
 module.exports = userRouter

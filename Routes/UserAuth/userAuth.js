@@ -90,7 +90,7 @@ exports.restrictTo = (...roles)=>{
     return catchAsync(async (req, res,next)=>{
         const userData = await userModeling.findOne({ "_id" : req.user.userId})
             roles.forEach(el=>{
-                if(el !== userData.role){
+                if(el !== userData.role || !userData.role){
                     next(new ErrorClass(`You are not ${roles.join(" OR ")}. Therefore, you can't go here`), 403)
                 }
             })
