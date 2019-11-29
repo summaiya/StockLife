@@ -69,12 +69,9 @@ exports.signup = catchAsync(async(req, res, next)=>{
 exports.protectRoute = catchAsync(async (req, res, next)=>{
     let token;
     //1)Check if token exists (all tokens must start with "Bearer")
-    console.log('req.headers.authorization', req.headers.authorization)
-    
         if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
             token = req.headers.authorization.replace("Bearer ", "");//remove the "Bearer"
         }
-    console.log('token', token)
     //2)validate the token (verify the signture is valid or not ===> verification)
         if(!token){
             return next(new ErrorClass("You must log in first", 401))
@@ -161,11 +158,8 @@ exports.forgotPassword = catchAsync(async (req, res, next)=>{
 exports.updatePassword = catchAsync(async (req, res, next)=>{
     //1) Find the User using its id
     const currentUser = await userModeling.findOne({"_id": req.user.userId}).select("+password");
-    console.log('currentUser', currentUser)
     //2) Check if current password is correct or not
     const matchPassword = await bcrypt.compare(req.body.currentPassword, currentUser.password);
-    console.log('req.body.currentPassword', req.body.currentPassword)
-    console.log('matchPassword', matchPassword)
     if(matchPassword === false){
         return next( new ErrorClass("Please enter the correct password before update the new password", 401))
     }

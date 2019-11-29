@@ -3,13 +3,11 @@ const userRouter = express.Router();
 const fs = require('fs');
 const userData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`));
 const {signup, login, protectRoute, restrictTo, resetPassword, forgotPassword, updatePassword} = require("./UserAuth/userAuth");
-// const signup = require('./UserRoutesModules/sign-up');
-// const login = require("./UserRoutesModules/login");
 //Fail and Success Response==========================
 const catchAsync = require("./controllers/catchAsync");
 const successDataResponse = require("./controllers/successResponse");
 //Fail and Success Response==========================
-
+const ErrorClass = require("../util/ErrorClass");
 const userModeling = require("../Model/userModeling");
 
 //ROUTE HANDLE ASSISTANCE----------------------------------------------------------------------------------------------------------------
@@ -58,19 +56,31 @@ const getUserInfo = (req, res)=>{
         );
     }
 }
-const changeUserInfo = (req, res)=>{
-    const currentPack = findItem(userData, req.params.id);
-    if(currentPack !== undefined){
-        const inputData = req.body; //NEW Incoming Data
-        const newCurrentPack = Object.assign(currentPack, inputData); // Update the Current Pack
-        userData[userData.indexOf(currentPack)] = newCurrentPack; //Insert the Updated Current Pack to the tourContent
-        writeFileFunc('PATCH'); 
-        res.status(200).json(successDataRes)
+const filterWhatToUpdate = (reqBody, ...ItemsKey)=>{
+    let newObj = {};
+    for (let [key, value] of Object.entries(reqBody)) {
+        if(ItemsKey.includes(key)){
+            newObj[key] = value
+        }
     }
-    else{
-        res.status(404).json(notFoundRes)
-    }
+    return newObj
 }
+const updateUserDatafromUser = catchAsync(async (req, res, next)=>{
+    //1) Filter if it contains password and direct to update password
+        if(req.body.password || req.body.passwordConfirm){
+            return next(new ErrorClass("You can't update password here!"), 404)
+        }
+        const user = await userModeling.findByIdAndUpdate(req.user.userId, filterWhatToUpdate(req.body, "name", "email", "photo"), {
+            new: true,
+            runValidators: true
+        }); 
+        
+    //2) Update documents for current User
+            res.status(200).json({
+                status:"success",
+                body: user
+            })
+}, 404)
 
 const deleteUserInfo = (req, res)=>{
     const deletePack = findItem(userData,(req.params.id));
@@ -85,21 +95,53 @@ const deleteUserInfo = (req, res)=>{
 }
 
 //Router------------------------------------------------------------------------------------------
+/**
+ * Functions: Forgot password sends email for temp generated token
+ * Limited: to everyone
+ */
 userRouter.route("/forgotPassword")
     .post(forgotPassword)
+/**
+ * Functions: Reset Password after forgot password
+ * Limited: to everyone
+ */
 userRouter.route("/resetPassword/:token")
     .post(resetPassword)
+/**
+ * Functions: Update password without (fogot password ==> reset password)
+ * Limited: to everyone
+ */
 userRouter.route("/updatePassword")
     .patch(protectRoute, updatePassword)
+/**
+ * Functions: Sign up
+ * Limited: to everyone
+ */
 userRouter.route('/signup')
     .post(signup)
+/**
+ * Functions: Login
+ * Limited: To everyone
+ */
 userRouter.route("/login")
     .get(login)
+/**
+ * Functions: Get All Users
+ * Limited: Only to admin
+ */
 userRouter.route('/')
     .get(protectRoute, restrictTo("admin"), getAllUser)
-    //.post(createUser)<=====================================Useless
+/**
+ * Functions: Change Current User Info from user side
+ * Limited: everyone
+ */
+userRouter.route("/updateUser-user")
+    .patch(protectRoute, updateUserDatafromUser)
+/**
+ * Functions: Change, Delete, get single user
+ * Limited: users and admins
+ */
 userRouter.route('/:id')
-    .patch(changeUserInfo)
     .delete(protectRoute, restrictTo("admin"), deleteUserInfo)
     .get(getUserInfo)
 
