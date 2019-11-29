@@ -9,6 +9,7 @@ const getAllPacks = catchAsync(async (req, res)=>{
     const tourAPIFeatures = new apiFeatures(req.query, tourDataModel).sortFieldPagination();
 //=============================================  
     //Main) Response Sent
-    res.status(200).json(await successDataRes(await tourAPIFeatures));
+    const allTours = await tourAPIFeatures;
+    res.status(200).json(await successDataRes(allTours));
 }, 404)
 module.exports = getAllPacks;

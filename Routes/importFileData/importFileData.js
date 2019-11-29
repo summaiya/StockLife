@@ -1,9 +1,9 @@
 const fs = require("fs");
 
-module.exports = (fileDirectory)=>{
-    const importData = JSON.parse(fs.readFileSync(fileDirectory));
+module.exports = async (fileDirectoryName, dataModel)=>{
+    const importData = JSON.parse(fs.readFileSync(fileDirectoryName));
     try{
-        console.log(importData);
+        await dataModel.create(importData);
     }catch(err){
         console.log(err)
     }
