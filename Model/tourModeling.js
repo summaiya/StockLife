@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const color = require("colors");
-const userModeling = require("./userModeling");
 const tourSchema = new mongoose.Schema({
     name: {
         required: [true, "Must have a Name"],

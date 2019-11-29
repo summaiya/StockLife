@@ -10,25 +10,26 @@ const crypto = require('crypto');
 
 
 
-//================================================================================
-const jwtTokenGenerator = (userId)=>{
-    return jwt.sign({userId}, process.env.JWT_SECRET_PASS, {
-        expiresIn: process.env.JWT_EXPIRES_IN
-    })
-}
-const resetPasswordFunction = async (userData, password, passwordConfirm)=>{
-    //3) Replace the input password to the current password
-    userData.password = password;
-    userData.passwordConfirm = passwordConfirm;
-    userData.passwordResetToken = undefined;
-    userData.passwordResetExpires = undefined;
-    await userData.save();
-   
-    const newJWTToken = jwtTokenGenerator(userData["_id"])
-    return newJWTToken
-    
-}
-//================================================================================
+// ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️Extra Funcs⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
+        const jwtTokenGenerator = (userId)=>{
+            return jwt.sign({userId}, process.env.JWT_SECRET_PASS, {
+                expiresIn: process.env.JWT_EXPIRES_IN
+            })
+        }
+        const resetPasswordFunction = async (userData, password, passwordConfirm)=>{
+            //3) Replace the input password to the current password
+            userData.password = password;
+            userData.passwordConfirm = passwordConfirm;
+            userData.passwordResetToken = undefined;
+            userData.passwordResetExpires = undefined;
+            await userData.save();
+        
+            const newJWTToken = jwtTokenGenerator(userData["_id"])
+            return newJWTToken
+            
+        }
+//⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️EXTRA FUNCS ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
+
 exports.login = catchAsync(async (req, res, next)=>{
     const {email, password} = req.body;
     //1) Check if the email and password exists
@@ -36,7 +37,7 @@ exports.login = catchAsync(async (req, res, next)=>{
         return next(new ErrorClass("We need both email and password, please try again!", 400))
     }
     //2)Check if user exists
-    const user = await userModeling.find({email}).select("+password");
+    const user = await userModeling.findOne({email}).select("+password");
 
     //2.5) Check if email and password are correct
         /**
@@ -48,7 +49,7 @@ exports.login = catchAsync(async (req, res, next)=>{
             return next(new ErrorClass("Email or Password wasn't correct, please try again!", 400));
         }
         else{ 
-            const jwtToken = jwtTokenGenerator(user[0]["_id"])
+            const jwtToken = jwtTokenGenerator(user["_id"])
             res.status(200).json(await successDataRes(user, jwtToken))
         }
 }, 404)
