@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
     },
     passwordResetExpires: {
         type: Date
+    },
+    review: {
+        type: mongoose.Schema.ObjectId,//mongoose.Schema.ObjectId //Array
+        ref: "Review"
     }
 })
 userSchema.pre("save", async function encryptData(next) {

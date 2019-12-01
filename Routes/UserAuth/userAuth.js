@@ -42,9 +42,9 @@ exports.login = catchAsync(async (req, res, next)=>{
         return next(new ErrorClass("We need both email and password, please try again!", 400))
     }
     //2)Check if user exists
-    const user = await userModeling.findOne({email}).select("+password");
+    const user = await userModeling.findOne({email}).select("+password").populate("review");
     //2.5) Check if email and password are correct
-    const matchPassword = await bcrypt.compare(password, user[0].password); //.compare compare the unhashed password vs hashed password
+    const matchPassword = await bcrypt.compare(password, user.password); //.compare compare the unhashed password vs hashed password
     //3)send token to client;
         if(matchPassword === false || user === null){
             return next(new ErrorClass("Email or Password wasn't correct, please try again!", 400));

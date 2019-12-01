@@ -14,6 +14,7 @@ dotEnv.config({path : "./config.env"});
 //Import Files =====================================
 const tourRouter = require('./Routes/TourRoutes');
 const userRouter = require('./Routes/UserRoutes');
+const reviewRouter = require("./Routes/reviewRoutes");
 //Import Files =====================================
 //Import ==================================================================================
 
@@ -48,6 +49,7 @@ const app = express();
 //Router
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter)
 
 //Handling wrong url: if above router didn't work, it will use the below Middleware
 app.use("*", (req, res, next)=>{
