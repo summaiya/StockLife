@@ -95,6 +95,12 @@ const tourSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: "User" // Create a reference to User Data model
         }
+    ],
+    review: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "Review"
+        }
     ]
 })
 // tourSchema.pre("save", async function (next){

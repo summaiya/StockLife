@@ -9,7 +9,6 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     }
-
 })
 
 const Review = new mongoose.model("Review", reviewSchema);

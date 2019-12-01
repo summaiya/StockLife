@@ -19,14 +19,14 @@ const createPack = catchAsync(async (req, res, next)=>{
 }, 401)
 
 const getSinglePack = catchAsync(async (req, res, next)=>{
-        const ans = await tourDataModel.findById(req.params.id).populate("admins"); //populate 1) the properties that you want to connects
-        if (ans===null){
+        const tourPack = await tourDataModel.findById(req.params.id).populate("admins"); //populate 1) the properties that you want to connects
+        if (tourPack===null){
             throw new Error ("Item is Not Found")
         }
         res.status(200).json(
             {
                 status: 'success',
-                data: ans
+                data: tourPack
             }
         )
 }, 404)
