@@ -1,6 +1,6 @@
 const importFilesFunc = require("../importFileData/importFileData");
 const fs = require('fs');
-const successDataRes = async(collectionData, token)=>{
+const successDataRes = (collectionData, token)=>{
     //importFilesFunc()
     return {
         status: 'Successful',

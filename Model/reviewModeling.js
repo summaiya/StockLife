@@ -16,13 +16,27 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    category: {
-        enum: ["tour", "user"],
-        type: String,
-        required: [true, "Specify who you want to write the review"]
+    Tour: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Tour"
+    },
+    Author: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
     }
 })
 
+
+reviewSchema.pre(/^find/, function(next){
+    this.populate({
+        path: "Tour", 
+        select: "name"
+    }).populate({
+        path: "Author",
+        select: "name photo"
+    })
+    next();
+})
 const Review = new mongoose.model("Review", reviewSchema);
 
 module.exports = Review
