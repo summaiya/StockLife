@@ -10,7 +10,7 @@ const {protectRoute} = require("./UserAuth/userAuth");
 
 
 const getAllReviews = catchAsyncError( async (req, res, next)=>{
-    const allReviews = await reviewModeling.find();
+    const allReviews = await 3336.find();
     res.status(200).json(successRes(allReviews));
 }, 404)
 
