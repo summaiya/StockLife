@@ -16,7 +16,13 @@ const getAllReviews = catchAsyncError( async (req, res, next)=>{
 
 const createReview = catchAsyncError(async(req, res, next)=>{
    const addedReview = await reviewModeling.create(req.body);
-
+   const addTourReview = await tourModeling.findByIdAndUpdate({
+        "_id" : addedReview["Tour"]
+    }, 
+    {
+        reviewHistory: addedReview["_id"]   
+    })
+    
     res.status(200).json(successRes(addedReview))
 }, 404)
 

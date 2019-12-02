@@ -26,12 +26,15 @@ const reviewSchema = new mongoose.Schema({
     }
 })
 
-
-reviewSchema.pre(/^find/, function(next){
+/**
+ * Apply to all the "find" or "findById" or "findByIdAndUpdate" or etc.
+ */
+reviewSchema.pre(/^find/, function(next){ 
     this.populate({
         path: "Tour", 
         select: "name"
-    }).populate({
+    })
+    this.populate({
         path: "Author",
         select: "name photo"
     })

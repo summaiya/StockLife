@@ -45,9 +45,6 @@ const userSchema = new mongoose.Schema({
     },
     passwordResetExpires: {
         type: Date
-    },
-    reviewHistory: {
-        type: Array
     }
 })
 userSchema.pre("save", async function encryptData(next) {

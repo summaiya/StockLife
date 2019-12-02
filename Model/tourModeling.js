@@ -96,9 +96,12 @@ const tourSchema = new mongoose.Schema({
             ref: "User" // Create a reference to User Data model
         }
     ],
-    reviewHistory: {
-        type: Array
-    }
+    reviewHistory:  [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "Review" // Create a reference to User Data model
+        }
+    ]
 })
 // tourSchema.pre("save", async function (next){
 //     const arrayOfIds = this.admins;
@@ -109,6 +112,11 @@ const tourSchema = new mongoose.Schema({
 //     this.admins = await Promise.all(arrayOfUsers)
 //     next();
 // })
+tourSchema.pre(/^find/, function(next){
+    this.populate("reviewHistory")
+    this.populate("admins")
+    next();
+})
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
