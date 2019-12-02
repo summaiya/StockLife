@@ -96,12 +96,10 @@ const tourSchema = new mongoose.Schema({
             ref: "User" // Create a reference to User Data model
         }
     ],
-    reviewHistory:  [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: "Review" // Create a reference to User Data model
-        }
-    ]
+    reviewHistory:  {
+        type: mongoose.Schema.ObjectId,
+        ref: "Review" // Create a reference to User Data model
+    }
 })
 // tourSchema.pre("save", async function (next){
 //     const arrayOfIds = this.admins;

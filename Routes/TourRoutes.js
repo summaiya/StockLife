@@ -5,6 +5,7 @@ const tourDataModel = require("../Model/tourModeling");
 //Framework & Routes & Data Model---------------------------------
 //Error ================================
 const catchAsync = require("./controllers/catchAsync");
+const ErrorClass = require("../util/ErrorClass");
 //Error ================================
 //-----------------Module Files-----------------------------------
 const getAllTours = require("./TourRoutesModules/getAllTours");
@@ -20,9 +21,8 @@ const createPack = catchAsync(async (req, res, next)=>{
 
 const getSinglePack = catchAsync(async (req, res, next)=>{
         const tourPack = await tourDataModel.findById(req.params.id); //populate 1) the properties that you want to connects
-        console.log('tourPack', tourPack)
         if (tourPack===null){
-            throw new Error ("Item is Not Found")
+            return next(new ErrorClass("Item is not found", 404))
         }
         res.status(200).json(
             {
