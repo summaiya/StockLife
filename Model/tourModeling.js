@@ -96,10 +96,10 @@ const tourSchema = new mongoose.Schema({
             ref: "User" // Create a reference to User Data model
         }
     ],
-    reviewHistory:  {
+    reviewHistory:  [{
         type: mongoose.Schema.ObjectId,
         ref: "Review" // Create a reference to User Data model
-    }
+    }]
 })
 // tourSchema.pre("save", async function (next){
 //     const arrayOfIds = this.admins;
@@ -110,11 +110,28 @@ const tourSchema = new mongoose.Schema({
 //     this.admins = await Promise.all(arrayOfUsers)
 //     next();
 // })
-tourSchema.pre(/^find/, function(next){
-    this.populate("reviewHistory")
-    this.populate("admins")
-    next();
-})
+
+
+/**
+ * 
+xxxSchema.virtual(<currentReferenceProperties>, {
+    ref: <Actual Data Model that we want to refer from>, 
+    foreignField: <properties name that the Actual Data Model 
+    refer to the currentReferenceProperties>localField: 
+
+    <local _id>
+
+ */
+// tourSchema.virtual("reviewHistory", {
+//     ref: "Review",
+//     foreignField: "tour",
+//     localField: "_id"
+// });
+// tourSchema.pre(/^find/, function(next){
+//     this.populate("reviewHistory")
+//     this.populate("admins")
+//     next();
+// })
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;

@@ -2,6 +2,7 @@
 const express = require('express');
 const tourRouter = express.Router();
 const tourDataModel = require("../Model/tourModeling");
+
 //Framework & Routes & Data Model---------------------------------
 //Error ================================
 const catchAsync = require("./controllers/catchAsync");
@@ -12,6 +13,8 @@ const getAllTours = require("./TourRoutesModules/getAllTours");
 const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./controllers/successResponse");
+const {createReview} = require("./reviewRoutes");
+const {protectRoute} = require("./UserAuth/userAuth");
 //-----------------Module Files---------------------------------
  //getAllTours Old Space
 const createPack = catchAsync(async (req, res, next)=>{
@@ -56,6 +59,9 @@ tourRouter.route('/:id')
     .get(getSinglePack)
     .patch(updatePack)
     .delete(deletePack)
-
+// tour/jdjkasdjasf/review
+tourRouter.route("/:tourId/createReview")
+    .post(protectRoute, createReview)
+//createReview
 
 module.exports = tourRouter;
