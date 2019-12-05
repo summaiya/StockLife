@@ -16,7 +16,7 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    tour: {
+    Tour: {
         type: mongoose.Schema.ObjectId,
         ref: "Tour"
     },
@@ -29,14 +29,17 @@ const reviewSchema = new mongoose.Schema({
 /**
  * Apply to all the "find" or "findById" or "findByIdAndUpdate" or etc.
  */
-// reviewSchema.pre("find", function(next){ 
-//     this.populate("Tour")
-//     // this.populate({
-//     //     path: "Author",
-//     //     select: "name photo"
-//     // })
-//     next();
-// })
+reviewSchema.pre(/^find/, function(next){ 
+    this.populate({
+        path: "Tour", 
+        select: "name id"
+    })
+    this.populate({
+        path: "Author",
+        select: "name photo"
+    })
+    next();
+})
 const Review = new mongoose.model("Review", reviewSchema);
 
 module.exports = Review

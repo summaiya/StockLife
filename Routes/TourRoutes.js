@@ -14,7 +14,7 @@ const getAllTours = require("./TourRoutesModules/getAllTours");
 const getStats = require("./TourRoutesModules/getStats");
 const {top_five_cheap_and_best} = require("./TourRoutesModules/alising");
 const successDataRes = require("./controllers/successResponse");
-const {createReview} = require("./reviewRoutes");
+const reviewRouter = require("./reviewRoutes")
 const {protectRoute} = require("./UserAuth/userAuth");
 //-----------------Module Files---------------------------------
  //getAllTours Old Space
@@ -24,7 +24,7 @@ const createPack = catchAsync(async (req, res, next)=>{
 }, 401)
 
 const getSinglePack = catchAsync(async (req, res, next)=>{
-        const tourPack = await tourDataModel.findById(req.params.id); //populate 1) the properties that you want to connects
+        const tourPack = await tourDataModel.findById(req.params.id).populate("reviewHistory").populate("admins"); //populate 1) the properties that you want to connects
         if (tourPack===null){
             return next(new ErrorClass("Item is not found", 404))
         }
@@ -61,8 +61,7 @@ tourRouter.route('/:id')
     .patch(updatePack)
     .delete(deletePack)
 // tour/jdjkasdjasf/review
-tourRouter.route("/:tourId/createReview")
-    .post(protectRoute, createReview)
 //createReview
+tourRouter.use("/:tourId/createReview", protectRoute, reviewRouter)
 
 module.exports = tourRouter;

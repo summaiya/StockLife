@@ -95,25 +95,30 @@ const tourSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: "User" // Create a reference to User Data model
         }
-    ],
-    reviewHistory:  [
-        {
-        type: mongoose.Schema.ObjectId,
-        ref: "Review" // Create a reference to User Data model
-        }
     ]
+    // ,reviewHistory:  [
+    //     {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "Review" // Create a reference to User Data model
+    //     }
+    // ]
+}, {
+    toJSON: {virtuals: true}, 
+    toObject: {virtuals: true}
 })
 
-// tourSchema.virtual("reviewHistory", {
-//     ref: "Review",
-//     foreignField: "tour",
-//     localField: "_id"
-// });
-tourSchema.pre(/^find/, function(next){
-    this.populate("reviewHistory")
-    this.populate("admins")
-    next();
-})
+tourSchema.virtual("reviewHistory", {
+    ref: "Review",
+    foreignField: "Tour",
+    localField: "_id",
+    justOne: false //turn it into an array
+});
+// tourSchema.pre("find", function(next){
+//     this.populate("reviewHistory");
+//     this.populate("admins");
+//     next();
+// })
+
 const Tour = new mongoose.model("Tour", tourSchema);
 
 module.exports = Tour;
@@ -123,9 +128,8 @@ module.exports = Tour;
 /**
 xxxSchema.virtual(<currentReferenceProperties>, {
     ref: <Actual Data Model that we want to refer from>, 
-    foreignField: <properties name that the Actual Data Model 
-    refer to the currentReferenceProperties>localField: 
-    <local _id>
+    foreignField: <properties name that the Actual Data Model refer to the currentReferenceProperties>
+    localField: <local _id>
  */
  ///////////////////////////////////////
  /**
