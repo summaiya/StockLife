@@ -8,7 +8,7 @@
     "cc": "ng g c settings",
     "gi": "ng g i _model/Photo --skip-tests --flat ",
     "ccc": "ng g c components/textInput",
-    "cs": "ng g s _services/order ",
+    "cs": "ng g s _services/auth ",
     "cm": "ng g m app-routing --flat --module=app",
     "cg": "ng g guard _guard/AuthGuard",
     "cp": "ng g pipe _pipe/truncatePipe --skip-tests --flat ",
