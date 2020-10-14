@@ -11,14 +11,33 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { AllstocksComponent } from './allstocks/allstocks.component';
-import { StockComponent } from './stock/stock.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ImageComponent } from './components/image/image.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './navbar/navbar.component';
+import { MystockComponent } from './mystock/mystock.component';
+import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SignupComponent, AllstocksComponent, StockComponent, DashboardComponent, SettingsComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SignupComponent,
+    AllstocksComponent,
+    DashboardComponent,
+    SettingsComponent,
+    ImageComponent,
+    HeaderComponent,
+    NavbarComponent,
+    MystockComponent,
+    DashboardHomeComponent,
+  ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,

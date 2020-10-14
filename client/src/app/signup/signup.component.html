@@ -1,1 +1,71 @@
-<p>signup works!</p>
+<app-header>Sign Up</app-header>
+<div class="container">
+  <div class="row">
+    <div class="col">
+    <form class="needs-validation" [formGroup]="developerForm" (ngSubmit)="submitFunc()">
+      <!-- Basic -->
+        <div class="mb-3">
+          <label for="name">Username</label>
+          <input type="text" class="form-control" id="name" formControlName="name" [ngClass]="{
+                        'is-invalid':
+                          developerForm.get('name').errors &&
+                          developerForm.get('name').touched
+                      }" />
+          <div class="invalid-feedback">
+            Please enter a valid First name
+          </div>
+        </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" formControlName="email" [ngClass]="{
+            'is-invalid':
+              developerForm.get('email').errors &&
+              developerForm.get('email').touched
+          }" />
+        <div class="invalid-feedback">
+          Please enter a valid email address.
+        </div>
+      </div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" formControlName="password" [ngClass]="{
+            'is-invalid':
+              developerForm.get('password').errors &&
+              developerForm.get('password').touched
+          }" />
+        <div class="invalid-feedback" *ngIf="
+            developerForm.get('password').hasError('required') &&
+            developerForm.get('password').touched
+          ">
+          Password is required
+        </div>
+        <div class="invalid-feedback" *ngIf="
+            developerForm.get('password').hasError('minlength') &&
+            developerForm.get('password').touched
+          ">
+          Password must be at least 8 characters
+        </div>
+        <div class="invalid-feedback" *ngIf="
+            developerForm.get('password').hasError('maxlength') &&
+            developerForm.get('password').touched
+          ">
+          Password cannot exceed 15 characters
+        </div>
+        <!-- Error Messages -->
+      </div>
+
+      <hr class="mb-4" />
+      <button style="background-color: #5bb462;" class="btn btn-lg btn-block" [disabled]="!developerForm.valid"
+        type="submit"> Submit
+      </button>
+    </form>
+
+    </div>
+    <div class="col">
+      <app-image [round]="false" url="assets/images/undraw_hiring_cyhs.png" des="Image"></app-image>
+    </div>
+  </div>
+</div>
