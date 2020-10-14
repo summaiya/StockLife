@@ -6,3 +6,6 @@ export interface IStock {
   margin: number;
   rate: number;
 }
+/**
+ * Please use these interfaces inside this application code. There are a lot of "any"s
+ */

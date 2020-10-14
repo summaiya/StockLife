@@ -72,3 +72,6 @@ export class SingleStockComponent implements OnInit {
   }
 
 }
+/**
+ * The code is very unreadable and it must be cleaned, not only for this file but also other files as well. I don't know why but my prettier is not working all a sudden, let me know if there is a way to fix
+ */

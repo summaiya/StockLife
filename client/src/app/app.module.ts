@@ -12,7 +12,6 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { AllstocksComponent } from './allstocks/allstocks.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SettingsComponent } from './settings/settings.component';
 import { ImageComponent } from './components/image/image.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +29,6 @@ import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2
     SignupComponent,
     AllstocksComponent,
     DashboardComponent,
-    SettingsComponent,
     ImageComponent,
     HeaderComponent,
     NavbarComponent,
