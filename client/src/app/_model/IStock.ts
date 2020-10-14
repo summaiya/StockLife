@@ -4,4 +4,5 @@ export interface IStock {
   min: number;
   past: number[];
   margin: number;
+  rate: number;
 }
