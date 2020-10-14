@@ -10,6 +10,6 @@
     Sign Up
   </button>
   <div class="dropdown" *ngIf="checkLogin()">
-    <button type="button" class="btn btn-secondary" disabled><b>Balance: $10,000</b></button>
+    <button type="button" class="btn btn-secondary" disabled><b>Balance: ${{data?.total | number}}</b></button>
   </div>
 </nav>

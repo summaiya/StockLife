@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { MystockComponent } from './mystock/mystock.component';
 import { SignupComponent } from './signup/signup.component';
+import { SingleStockComponent } from './single-stock/single-stock.component';
 import { AuthGuardServiceService } from './_guard/auth-guard.guard';
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: 'all-stocks',
         component: AllstocksComponent,
+      },
+      {
+        path: 'stocks/:id',
+        component: SingleStockComponent,
       },
       {
         path: 'dashboard',

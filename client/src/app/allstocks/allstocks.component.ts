@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { StockService } from '../_services/stock.service';
 
 
@@ -10,7 +11,7 @@ import { StockService } from '../_services/stock.service';
 })
 export class AllstocksComponent implements OnInit {
   data: any[] = [];
-  constructor(private StockS: StockService) { }
+  constructor(private StockS: StockService, private route: Router) { }
   config = {
     max : false,
   min : false,
@@ -25,8 +26,9 @@ export class AllstocksComponent implements OnInit {
       this.data = [];
       res.forEach(doc => {
         const { name, min, max, margin, past } = doc.data();
-        const rate =parseFloat( ((past[3] - past[2]) / past[2] * 100).toFixed(2));
-        this.data.push({name, min, max, margin, past, rate });
+        const rate = parseFloat(((past[3] - past[2]) / past[2] * 100).toFixed(2));
+        const uid = doc.id;
+        this.data.push({name, min, max, margin, past, rate , uid});
       })
     }))
   }
@@ -47,6 +49,9 @@ export class AllstocksComponent implements OnInit {
     }
     this.config[name] = !this.config[name];
   };
-
+  redirect(id: string) {
+    console.log('id', id)
+    this.route.navigate([`stocks/${id}`]);
+  }
 
 }

@@ -62,10 +62,24 @@ export class AuthService {
   async signOut() {
     await this.afAuth.signOut();
     localStorage.removeItem('user');
+    localStorage.removeItem('userData');
     this.router.navigate(['login']);
   }
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
     return user !== null;
+  }
+  getUser() {
+    return this.afs.collection("users").doc(localStorage.getItem("user").substring(1,localStorage.getItem("user").length-1)).get();
+  }
+
+  editUser(data) {
+    return this.afs.collection("users")
+      .doc(localStorage.getItem("user").substring(1,localStorage.getItem("user").length-1))
+      .set(data).then(res => {
+        console.log('res', res)
+      }).catch(err => {
+        console.log(err);
+      });
   }
 }

@@ -19,6 +19,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MystockComponent } from './mystock/mystock.component';
 import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
+import { SingleStockComponent } from './single-stock/single-stock.component';
+import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2-angular-charts';
+
 
 @NgModule({
   declarations: [
@@ -33,8 +36,10 @@ import { DashboardHomeComponent } from './dashboard-home/dashboard-home.componen
     NavbarComponent,
     MystockComponent,
     DashboardHomeComponent,
+    SingleStockComponent,
   ],
   imports: [
+    ChartModule,
     ReactiveFormsModule,
     BrowserModule,
     FormsModule,
@@ -42,7 +47,7 @@ import { DashboardHomeComponent } from './dashboard-home/dashboard-home.componen
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
   ],
-  providers: [],
+  providers: [ LineSeriesService, CategoryService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

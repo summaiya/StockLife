@@ -8,7 +8,11 @@ import { AuthService } from '../_services/auth.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authServer: AuthService) {}
+  data: any;
+  constructor(private authServer: AuthService) {
+    this.getUser();
+
+  }
 
   ngOnInit(): void {}
   checkLogin() {
@@ -16,5 +20,11 @@ export class NavbarComponent implements OnInit {
   }
   logout() {
     return this.authServer.signOut();
+  }
+  getUser() {
+    this.authServer.getUser().subscribe(res => {
+     this.data = res.data();
+      localStorage.setItem("userData", JSON.stringify(this.data));
+    })
   }
 }
