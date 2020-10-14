@@ -13,7 +13,4 @@ export class StockService {
   getOneStock(id: string) {
     return this.afs.collection('stock').doc(id).get();
   }
-  buyStock() {
-
-  }
 }

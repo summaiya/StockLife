@@ -11,7 +11,8 @@
     </div>
     <div class="col-4">
       <form class="needs-validation" [formGroup]="stockForm" (ngSubmit)="submitFunc()">
-            <label for="stocks">Price: {{stockValueGet.value * stock.past[3]}} </label>
+            <label for="stocks"><b>Price: ${{(stockValueGet.value * stock.past[3]).toFixed(2) | number}} </b></label>
+            <br/>
             <input type="number" class="form-control" id="stocks" formControlName="stocks" [ngClass]="{
                           'is-invalid':
                             stockForm.get('stocks').errors &&

@@ -1,1 +1,28 @@
-<app-dashboard><p>mystock works!</p></app-dashboard>
+<app-dashboard>
+
+  <table class="mt-5 table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Total Value</th>
+        <th scope="col">Total Stocks</th>
+        <th scope="col">Current Price  </th>
+        <th scope="col">Return Percentage</th>
+        <th scope="col">Profit</th>
+        <th scope="col">Action  </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of stocksShow">
+        <th scope="row">{{item?.name}}</th>
+        <td>{{(item?.stocksPurchased * item?.currentPrice).toFixed(2)}}</td>
+        <td>{{item?.stocksPurchased}}</td>
+        <td>${{item?.currentPrice}}</td>
+        <td>{{item?.ROI}} %</td>
+        <td>{{item?.profit}}</td>
+        <td><button (click)="sellAll(item?.name)" >Sell All</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+</app-dashboard>
