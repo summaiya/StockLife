@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { auth } from 'firebase';
 import { AuthService } from '../_services/auth.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-navbar',
@@ -9,22 +9,25 @@ import { AuthService } from '../_services/auth.service';
 })
 export class NavbarComponent implements OnInit {
   data: any;
-  constructor(private authServer: AuthService) {
-    this.getUser();
+  isLoggedIn$: Observable<boolean>;
 
+  constructor(private authServer: AuthService) {
+    this.authServer.getUser();
+    this.subscribeToUser();
   }
 
-  ngOnInit(): void {}
-  checkLogin() {
-    return this.authServer.isLoggedIn;
+  ngOnInit(): void {
+    this.isLoggedIn$ = this.authServer.isLoggedIn;
   }
   logout() {
     return this.authServer.signOut();
   }
-  getUser() {
-    this.authServer.getUser().subscribe(res => {
-     this.data = res.data();
-      localStorage.setItem("userData", JSON.stringify(this.data));
-    })
+  subscribeToUser() {
+    this.authServer.user.asObservable().subscribe((res) => {
+      if (res) {
+        this.data = res;
+        localStorage.setItem('userData', JSON.stringify(this.data));
+      }
+    });
   }
 }

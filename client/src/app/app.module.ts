@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule ,  CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 // Configure firebase.
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -20,8 +21,14 @@ import { MystockComponent } from './mystock/mystock.component';
 import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
 import { SingleStockComponent } from './single-stock/single-stock.component';
 import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2-angular-charts';
-
-
+// spinner module added to overcome data delays
+import { NgxSpinnerModule } from "ngx-spinner";
+import { HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent, 
+  HTTP_INTERCEPTORS} from '@angular/common/http';
+import { LoadingInterceptor } from './interceptors/loading.interceptors';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +42,7 @@ import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2
     MystockComponent,
     DashboardHomeComponent,
     SingleStockComponent,
+    // SpinnerComponent
   ],
   imports: [
     ChartModule,
@@ -44,8 +52,12 @@ import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
-  providers: [ LineSeriesService, CategoryService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [ LineSeriesService, CategoryService,
+  { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

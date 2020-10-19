@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StockService } from '../_services/stock.service';
-
-
-
 @Component({
   selector: 'app-allstocks',
   templateUrl: './allstocks.component.html',

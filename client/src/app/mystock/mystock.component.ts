@@ -11,6 +11,7 @@ export class MystockComponent implements OnInit {
   allStocks: any[]
   currentUser: any
   stocksShow: any[];
+
   constructor(private StockS: StockService, private Account: AuthService) {
     this.getAll();
   }
@@ -44,10 +45,11 @@ export class MystockComponent implements OnInit {
   }
 
   sellAll(name: string) {
+    const currentStock = this.stocksShow.find(x=>x.name === name);
     this.currentUser.stock.forEach((element, index) => {
       if (element.name === name) {
         this.currentUser.stock.splice (index, 1);
-        this.currentUser.total += element.price * element.stocksPurchased;
+        this.currentUser.total += currentStock.currentPrice * element.stocksPurchased;
       }
     });
     this.Account.editUser(this.currentUser).then(res => {

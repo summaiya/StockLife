@@ -3,16 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyCSBF2rXJk5IusYTzANXY5g19jWVYTglzs',
-    authDomain: 'stocklife-6211a.firebaseapp.com',
-    databaseURL: 'https://stocklife-6211a.firebaseio.com',
-    projectId: 'stocklife-6211a',
-    storageBucket: 'stocklife-6211a.appspot.com',
-    messagingSenderId: '932813261953',
-    appId: '1:932813261953:web:96cab9d039959c787d1180',
-    measurementId: 'G-NP5Z5GHCYL',
+    apiKey: 'AIzaSyCkF1ZuJ6SxPagdyWi5blmkfVeTqV5EUkc',
+    authDomain: 'stocklife-c40eb.firebaseapp.com',
+    databaseURL: 'https://stocklife-c40eb.firebaseio.com',
+    projectId: 'stocklife-c40eb',
+    storageBucket: 'stocklife-c40eb.appspot.com',
+    messagingSenderId: '824774749877',
+    appId: '1:824774749877:web:b38f108ae5e5a8105d98fc',
   },
 };
 

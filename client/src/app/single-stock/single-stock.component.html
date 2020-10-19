@@ -1,34 +1,58 @@
-  <div class="mt-4" [style.width]="'80%'" [style.margin]="'auto'"><h4 class="alert-heading">{{stock.name}}</h4>
-    <hr></div>
+<div class="mt-4" [style.width]="'80%'" [style.margin]="'auto'">
+  <h4 class="alert-heading">{{ stock.name }}</h4>
+  <hr />
+</div>
 <div class="container mt-4">
   <div class="row">
     <div class="col-8">
-      <ejs-chart style='display:block' id='chartcontainer'  [primaryXAxis]='primaryXAxis'>
+      <ejs-chart
+        style="display: block"
+        id="chartcontainer"
+        [primaryXAxis]="primaryXAxis"
+      >
         <e-series-collection>
-            <e-series [dataSource]='data' type='Line' xName='x' yName='y'> </e-series>
+          <e-series [dataSource]="data" type="Line" xName="x" yName="y">
+          </e-series>
         </e-series-collection>
-        </ejs-chart>
+      </ejs-chart>
     </div>
     <div class="col-4">
-      <form class="needs-validation" [formGroup]="stockForm" (ngSubmit)="submitFunc()">
-            <label for="stocks"><b>Price: ${{(stockValueGet.value * stock.past[3]).toFixed(2) | number}} </b></label>
-            <br/>
-            <input type="number" class="form-control" id="stocks" formControlName="stocks" [ngClass]="{
-                          'is-invalid':
-                            stockForm.get('stocks').errors &&
-                            stockForm.get('stocks').touched
-                        }" />
-            <div class="invalid-feedback">
-              Please enter a valid value
-            </div>
+      <form
+        class="needs-validation"
+        [formGroup]="stockForm"
+        (ngSubmit)="submitFunc()"
+      >
+        <label for="stocks"
+          ><b
+            >Price: ${{
+              (stockValueGet.value * stock.past[3]).toFixed(2) | number
+            }}
+          </b></label
+        >
+        <br />
+        <input
+          type="number"
+          class="form-control"
+          id="stocks"
+          formControlName="stocks"
+          [ngClass]="{
+            'is-invalid':
+              stockForm.get('stocks').errors && stockForm.get('stocks').touched
+          }"
+        />
+        <div class="invalid-feedback">Please enter a valid value</div>
 
-<br>
-            <button class="btn btn-warning btn-lg btn-block" [disabled]="!stockForm.valid"
-          type="submit"> BUY
+        <br />
+        <button
+          class="btn btn-warning btn-lg btn-block"
+          [disabled]="!disableCheck()"
+          type="submit"
+        >
+          BUY
         </button>
       </form>
-
     </div>
   </div>
 </div>
-
+<!-- 
+          [disabled]="!((getTotal().toFixed(2)>((stockValueGet.value * stock.past[3]).toFixed(2))))" -->

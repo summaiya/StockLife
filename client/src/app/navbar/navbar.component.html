@@ -1,15 +1,15 @@
 <nav class="navbar navbar-expand-md navbar-dark" style="background-image: linear-gradient(to left, #8fd974, #4ca456);">
-  <a *ngIf="checkLogin() == false" class="navbar-brand" routerLink="/"><b>StockLife💰</b></a>
-  <a *ngIf="checkLogin() == true" class="navbar-brand" routerLink="/dashboard"><b>StockLife💰</b></a>
+  <a *ngIf="!isLoggedIn$" class="navbar-brand" routerLink="/"><b>StockLife💰</b></a>
+  <a *ngIf="isLoggedIn$" class="navbar-brand" routerLink="/dashboard"><b>StockLife💰</b></a>
   <ul class="navbar-nav mr-auto">
   </ul>
-  <button *ngIf="!checkLogin()" type="button" routerLink="/login" class="btn btn-light auth">
+  <button *ngIf="!(isLoggedIn$ | async)" type="button" routerLink="/login" class="btn btn-light auth">
     Log In
   </button>
-  <button  *ngIf="!checkLogin()" type="button" routerLink="/signup" class="btn btn-dark auth">
+  <button  *ngIf="!(isLoggedIn$ | async)" type="button" routerLink="/signup" class="btn btn-dark auth">
     Sign Up
   </button>
-  <div class="dropdown" *ngIf="checkLogin()">
+  <div class="dropdown" *ngIf="isLoggedIn$ | async">
     <button type="button" class="btn btn-secondary" disabled><b>Balance: ${{data?.total | number}}</b></button>
   </div>
 </nav>
