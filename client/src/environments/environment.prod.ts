@@ -1,12 +1,13 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyCkF1ZuJ6SxPagdyWi5blmkfVeTqV5EUkc',
-    authDomain: 'stocklife-c40eb.firebaseapp.com',
-    databaseURL: 'https://stocklife-c40eb.firebaseio.com',
-    projectId: 'stocklife-c40eb',
-    storageBucket: 'stocklife-c40eb.appspot.com',
-    messagingSenderId: '824774749877',
-    appId: '1:824774749877:web:b38f108ae5e5a8105d98fc',
+    apiKey: "AIzaSyCdlCzAqu0P346ayKyyEeyT9oIXjSFPkOQ",
+    authDomain: "stocklifenew.firebaseapp.com",
+    databaseURL: "https://stocklifenew.firebaseio.com",
+    projectId: "stocklifenew",
+    storageBucket: "stocklifenew.appspot.com",
+    messagingSenderId: "364599168691",
+    appId: "1:364599168691:web:cac4a12b17a9c0c502eac6",
+    measurementId: "G-43H64FN2KE"
   }
 };
