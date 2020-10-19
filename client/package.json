@@ -5,7 +5,7 @@
     "ng": "ng",
     "gc": "git add . && git commit -m 'add auth' && git push .",
     "start": "ng serve --open",
-    "cc": "ng g c SingleStock",
+    "cc": "ng g c SingleBusiness",
     "gi": "ng g i _model/Photo --skip-tests --flat ",
     "ccc": "ng g c components/navbar",
     "cs": "ng g s _services/stock ",

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AllbusinessesComponent } from './allbusinesses/allbusinesses.component';
 import { AllstocksComponent } from './allstocks/allstocks.component';
-import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { MyBusinessesComponent } from './my-businesses/my-businesses.component';
 import { MystockComponent } from './mystock/mystock.component';
 import { SignupComponent } from './signup/signup.component';
 import { SingleStockComponent } from './single-stock/single-stock.component';
@@ -18,7 +18,7 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuardServiceService],
     children: [
-      { path: '', component: DashboardHomeComponent },
+      { path: '', component: MystockComponent },
       {
         path: 'all-stocks',
         component: AllstocksComponent,
@@ -28,9 +28,17 @@ const routes: Routes = [
         component: SingleStockComponent,
       },
       {
-        path: 'dashboard',
-        component: MystockComponent,
+        path: 'management',
+        component: MyBusinessesComponent,
       },
+      {
+        path: 'businesses',
+        component: AllbusinessesComponent,
+      },{
+        path: 'businesses/:id',
+        component: SingleStockComponent,
+      },
+
     ],
   },
 ];

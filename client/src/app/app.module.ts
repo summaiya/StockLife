@@ -18,7 +18,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MystockComponent } from './mystock/mystock.component';
-import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
 import { SingleStockComponent } from './single-stock/single-stock.component';
 import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2-angular-charts';
 // spinner module added to overcome data delays
@@ -26,9 +25,12 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { HttpInterceptor,
   HttpRequest,
   HttpHandler,
-  HttpEvent, 
+  HttpEvent,
   HTTP_INTERCEPTORS} from '@angular/common/http';
 import { LoadingInterceptor } from './interceptors/loading.interceptors';
+import { AllbusinessesComponent } from './allbusinesses/allbusinesses.component';
+import { MyBusinessesComponent } from './my-businesses/my-businesses.component';
+import { SingleBusinessComponent } from './single-business/single-business.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,8 +42,10 @@ import { LoadingInterceptor } from './interceptors/loading.interceptors';
     HeaderComponent,
     NavbarComponent,
     MystockComponent,
-    DashboardHomeComponent,
     SingleStockComponent,
+    AllbusinessesComponent,
+    MyBusinessesComponent,
+    SingleBusinessComponent,
     // SpinnerComponent
   ],
   imports: [
