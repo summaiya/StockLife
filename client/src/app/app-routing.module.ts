@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AllbusinessesComponent } from './allbusinesses/allbusinesses.component';
 import { AllstocksComponent } from './allstocks/allstocks.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { MyBusinessesComponent } from './my-businesses/my-businesses.component';
 import { MystockComponent } from './mystock/mystock.component';
@@ -12,7 +13,6 @@ import { AuthGuardServiceService } from './_guard/auth-guard.guard';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-
   {
     path: '',
     runGuardsAndResolvers: 'always',
@@ -34,11 +34,15 @@ const routes: Routes = [
       {
         path: 'businesses',
         component: AllbusinessesComponent,
-      },{
+      },
+      {
         path: 'businesses/:id',
         component: SingleStockComponent,
       },
-
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      }
     ],
   },
 ];
@@ -47,4 +51,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

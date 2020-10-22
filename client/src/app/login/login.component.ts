@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 
 @Component({
@@ -7,32 +6,35 @@ import { AuthService } from '../_services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   readonly emailOnly = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  isValidateTextTrue(data: any) {
+
+  isValidateTextTrue(data: any): boolean {
     if (data.touched && data.valid) {
       return true;
     } else {
       return false;
     }
   }
-  isValidateTextFalse(data: any) {
+
+  isValidateTextFalse(data: any): boolean {
     if (data.touched && data.invalid) {
       return true;
     } else {
       return false;
     }
   }
-  submitFunc(data: any, event: Event) {
+
+  submitFunc(data: any, event: Event): void {
     event.preventDefault();
     const { value } = data;
     this.authS
       .signin(value.email, value.password)
-      .then((arg) => {})
+      .then(() => { })
       .catch((err) => {
         alert(err.message);
       });
   }
-  constructor(private route: Router, private authS: AuthService) {}
-  ngOnInit(): void {}
+
+  constructor(private authS: AuthService) { }
 }

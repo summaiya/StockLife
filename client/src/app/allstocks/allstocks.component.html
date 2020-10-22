@@ -4,30 +4,52 @@
     <thead>
       <tr>
         <th scope="col">Name</th>
-
-        <th scope="col" (click)="sortUp('min')" *ngIf="config.min"><i class="fas fa-angle-down"></i> {{ 'min' | titlecase }}</th>
-        <th scope="col"  (click)="sortDown('min')" *ngIf="!config.min"><i class="fas fa-angle-up"></i> {{ 'min' | titlecase }}</th>
-
-        <th scope="col" (click)="sortUp('max')" *ngIf="config.max"><i class="fas fa-angle-down"></i> {{ 'max' | titlecase }}</th>
-        <th scope="col"  (click)="sortDown('max')" *ngIf="!config.max"><i class="fas fa-angle-up"></i> {{ 'max' | titlecase }}</th>
-
-        <th scope="col" (click)="sortUp('current')" *ngIf="config.current"><i class="fas fa-angle-down"></i> {{ 'current' | titlecase }}</th>
-        <th scope="col"  (click)="sortDown('current')" *ngIf="!config.current"><i class="fas fa-angle-up"></i> {{ 'current' | titlecase }}</th>
-
-
-        <th scope="col" (click)="sortUp('rate')" *ngIf="config.rate"><i class="fas fa-angle-down"></i> {{ 'rate' | titlecase }}</th>
-        <th scope="col"  (click)="sortDown('rate')" *ngIf="!config.rate"><i class="fas fa-angle-up"></i> {{ 'rate' | titlecase }}</th>
-
+        <th scope="col" (click)="sortUp('min')" *ngIf="config.min">
+          <i class="fas fa-angle-down"></i>
+          {{ 'min' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortDown('min')" *ngIf="!config.min">
+          <i class="fas fa-angle-up"></i>
+          {{ 'min' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortUp('max')" *ngIf="config.max">
+          <i class="fas fa-angle-down"></i>
+          {{ 'max' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortDown('max')" *ngIf="!config.max">
+          <i class="fas fa-angle-up"></i>
+          {{ 'max' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortUp('current')" *ngIf="config.current">
+          <i class="fas fa-angle-down"></i>
+          {{ 'current' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortDown('current')" *ngIf="!config.current">
+          <i class="fas fa-angle-up"></i>
+          {{ 'current' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortUp('rate')" *ngIf="config.rate">
+          <i class="fas fa-angle-down"></i>
+          {{ 'rate' | titlecase }}
+        </th>
+        <th scope="col" (click)="sortDown('rate')" *ngIf="!config.rate">
+          <i class="fas fa-angle-up"></i>
+          {{ 'rate' | titlecase }}
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of data" (click)='redirect(item.uid)'>
         <th scope="row">{{item.name}}</th>
-        <td>{{item.min}}</td>
-        <td>{{item.max}}</td>
-        <td>{{item.past[3]}}</td>
-        <td><i *ngIf="item.rate <0"  class="fas fa-angle-down" [style.color]="'red'"></i> <i *ngIf="item.rate > 0" class="fas fa-angle-up" [style.color]="'green'"></i>{{" "}}{{((item.past[3]-item.past[2])/item.past[2]*100).toFixed(2)}}</td>
+        <td>{{ item.min }}</td>
+        <td>{{ item.max }}</td>
+        <td>{{ item.past[3] }}</td>
+        <td>
+          <i *ngIf="showCorrectAngleIcon(item.rate)" class="fas fa-angle-down" [style.color]="'red'"></i>
+          <i *ngIf="showCorrectAngleIcon(item.rate)" class="fas fa-angle-up" [style.color]="'green'"></i>
+          {{ " " }}{{ ((item.past[3]-item.past[2])/item.past[2]*100).toFixed(2) }}
+        </td>
       </tr>
     </tbody>
-  </table></app-dashboard>
-<!-- {{data | json}} -->
+  </table>
+</app-dashboard>

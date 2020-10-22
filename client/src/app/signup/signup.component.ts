@@ -10,16 +10,15 @@ import { AuthService } from '../_services/auth.service';
 })
 export class SignupComponent implements OnInit {
   developerForm: FormGroup;
-  /**
-   *
-   */
+
   constructor(private authS: AuthService, private router: Router) {}
+
   readonly emailOnly = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
   ngOnInit(): void {
     this.developerForm = new FormGroup({
-      name: new FormControl('asdasd', [Validators.required]),
-      email: new FormControl('asasdasd@email.com', [
+      name: new FormControl('Your name', [Validators.required]),
+      email: new FormControl('yourname@domain.com', [
         Validators.pattern(this.emailOnly),
         Validators.required,
       ]),
@@ -31,10 +30,10 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  submitFunc() {
+  submitFunc(): void {
     this.authS
       .signup(this.developerForm.value)
-      .then((res) => this.router.navigate(['dashboard']))
+      .then(() => this.router.navigate(['']))
       .catch((err) => alert(err));
   }
 }

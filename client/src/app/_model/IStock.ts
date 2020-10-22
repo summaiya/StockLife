@@ -5,6 +5,7 @@ export interface IStock {
   past: number[];
   margin: number;
   rate: number;
+  uid: string;
 }
 /**
  * Please use these interfaces inside this application code. There are a lot of "any"s

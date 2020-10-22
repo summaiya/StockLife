@@ -1,36 +1,30 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule ,  CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-// Configure firebase.
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-
-// Importing the environment config file for the firebase configuration.
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CategoryService, ChartModule, LineSeriesService } from '@syncfusion/ej2-angular-charts';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
+import { AllbusinessesComponent } from './allbusinesses/allbusinesses.component';
+import { AllstocksComponent } from './allstocks/allstocks.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { SignupComponent } from './signup/signup.component';
-import { AllstocksComponent } from './allstocks/allstocks.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ImageComponent } from './components/image/image.component';
 import { HeaderComponent } from './components/header/header.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavbarComponent } from './navbar/navbar.component';
-import { MystockComponent } from './mystock/mystock.component';
-import { SingleStockComponent } from './single-stock/single-stock.component';
-import { ChartModule, LineSeriesService, CategoryService } from '@syncfusion/ej2-angular-charts';
-// spinner module added to overcome data delays
-import { NgxSpinnerModule } from "ngx-spinner";
-import { HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HTTP_INTERCEPTORS} from '@angular/common/http';
+import { ImageComponent } from './components/image/image.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptors';
-import { AllbusinessesComponent } from './allbusinesses/allbusinesses.component';
+import { LoginComponent } from './login/login.component';
 import { MyBusinessesComponent } from './my-businesses/my-businesses.component';
+import { MystockComponent } from './mystock/mystock.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { SignupComponent } from './signup/signup.component';
 import { SingleBusinessComponent } from './single-business/single-business.component';
+import { SingleStockComponent } from './single-stock/single-stock.component';
+import { SpinnerComponent } from './ui_spinner/spinner/spinner.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +40,7 @@ import { SingleBusinessComponent } from './single-business/single-business.compo
     AllbusinessesComponent,
     MyBusinessesComponent,
     SingleBusinessComponent,
-    // SpinnerComponent
+    SpinnerComponent
   ],
   imports: [
     ChartModule,
@@ -60,8 +54,10 @@ import { SingleBusinessComponent } from './single-business/single-business.compo
     BrowserAnimationsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [ LineSeriesService, CategoryService,
-  { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },],
+  providers: [
+    LineSeriesService, CategoryService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
